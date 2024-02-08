@@ -11,8 +11,7 @@ module.exports = {
                 genre,
                 dateNaissance
             } = req.body;
-
-            const result = new Client(
+            await new Client(
                 null,
                 nom,
                 prenom,
@@ -22,9 +21,13 @@ module.exports = {
                 dateNaissance,
                 10
             ).insert();
-            res.status(200).send(result);
+            res.status(200).send({
+                message: "Client inscrit avec succes",
+            });
         } catch (error) {
-            res.status(500).send({ message: error.message })
+            res.status(500).send({
+                message: error.message
+            })
         }
     },
 }
