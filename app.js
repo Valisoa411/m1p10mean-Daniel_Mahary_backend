@@ -6,8 +6,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 var logger = require('morgan');
 
-var vehiculesRouter = require('./routes/vehicules');
-var router = require('./routes/routes');
+// import all routes
+var routes = require('./routes/routes');
 
 var app = express();
 
@@ -21,7 +21,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api', vehiculesRouter);
+// integrate the route to the app
+app.use('/api', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
