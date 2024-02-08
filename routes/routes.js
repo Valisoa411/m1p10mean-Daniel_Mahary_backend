@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/db');
 
-router.get('/hello', async (req, res) => {
+router.get('/hello/:id', async (req, res) => {
   try {
-    res.status(200).json({ message: "HELLO!!!" });
+    console.log(req.params.id);
+    res.status(200).json({ message: "HELLO!!!: " });
   } catch (error) {
     res.status(500).send('Erreur lors de la récupération des véhicules.');
   }
