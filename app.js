@@ -8,6 +8,7 @@ var logger = require('morgan');
 
 // import all routes
 var routes = require('./routes/routes');
+var routesClient = require('./routes/client');
 
 var app = express();
 
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // integrate the route to the app
 app.use('/api', routes);
+// app.use('/test', routesClient);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

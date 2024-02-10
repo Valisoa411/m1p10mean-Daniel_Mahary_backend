@@ -11,10 +11,11 @@
 //     'Doe',
 //     'alice',
 //     'andriamahefazafymahali@gmail.com',
-//     'cool',
+//     'mahariabo',
 //     'Masculin',
 //     new Date('1990-01-01'),
-//     0
+//     0,
+//     new Date()
 //   );
 
 //   newclient= await customer.insert();
