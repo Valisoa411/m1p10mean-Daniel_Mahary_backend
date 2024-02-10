@@ -28,7 +28,7 @@ class Manager {
     async loginManager() {
         const manager = await ManagerModel.findOne({ login: this.login });
         if (manager) {
-            const passwordMatch = bcrypt.compare(this.mdp, manager.mdp);
+            const passwordMatch = await bcrypt.compare(this.mdp, manager.mdp);
             if (passwordMatch) {
                 return manager;
             } else {

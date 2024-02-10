@@ -24,7 +24,7 @@ class Service {
         this.prix = prix;
         this.duree = duree;
         this.commission = commission;
-        this.descritpion = descritpion;
+        this.description = description;
         this.photo = photo;
     }
 

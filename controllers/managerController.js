@@ -25,7 +25,7 @@ module.exports = {
                 login,
                 mdp,
             } = req.body;
-            const manager = new Manager(
+            const manager = await new Manager(
                 login,
                 mdp
             ).loginManager();

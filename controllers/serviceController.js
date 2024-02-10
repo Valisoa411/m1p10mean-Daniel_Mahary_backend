@@ -10,6 +10,7 @@ module.exports = {
                 service,
             })
         } catch (error) {
+            console.log("createService error: ", error);
             res.status(500).send({
                 message: error.message
             })
@@ -48,8 +49,7 @@ module.exports = {
 
     async updateService(req, res) {
         try {
-            const _id = req.params.id;
-            const {nom, prix, duree, commission, description, photo} = req.body;
+            const {_id, nom, prix, duree, commission, description, photo} = req.body;
             const service = new Service(nom, prix, duree, commission, description, photo);
             service._id = _id;
             await service.update();
