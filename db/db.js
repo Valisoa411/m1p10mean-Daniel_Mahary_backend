@@ -2,8 +2,8 @@
 
 const mongoose = require('mongoose');
 
-// const mongoURI = "mongodb+srv://andriamahefazafymahali:XBLFkgwK4psPGSLi@cluster0.1j3scbv.mongodb.net/?retryWrites=true&w=majority"; // Remplacez ceci par l'URI réel de votre base de données MongoDB
-const mongoURI="mongodb+srv://andriamahefazafymahali:kgCJA6D5S6lFgN57@cluster0.isejbak.mongodb.net/?retryWrites=true&w=majority"
+const mongoURI = "mongodb+srv://andriamahefazafymahali:XBLFkgwK4psPGSLi@cluster0.1j3scbv.mongodb.net/Beaute?retryWrites=true&w=majority"; // Remplacez ceci par l'URI réel de votre base de données MongoDB
+// const mongoURI="mongodb+srv://andriamahefazafymahali:kgCJA6D5S6lFgN57@cluster0.isejbak.mongodb.net/?retryWrites=true&w=majority"
 
 
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });

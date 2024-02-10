@@ -11,18 +11,18 @@ module.exports = {
                 genre,
                 dateNaissance
             } = req.body;
-            await new Client(
-                null,
+            const client = await new Client(
                 nom,
                 prenom,
                 email,
                 mdp,
                 genre,
                 dateNaissance,
-                10
+                1
             ).insert();
             res.status(200).send({
                 message: "Client inscrit avec succes",
+                client,
             });
         } catch (error) {
             res.status(500).send({

@@ -16,7 +16,6 @@ const ClientModel = mongoose.model('Client', ClientSchema);
 
 class Client {
     constructor(
-        _id = null,
         nom = null,
         prenom = null,
         email = null,
@@ -25,7 +24,6 @@ class Client {
         dateNaissance = null,
         etat = null,
     ) {
-        this._id = _id;
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
@@ -61,7 +59,7 @@ class Client {
         const salt = bcrypt.genSaltSync(saltRounds);
         this.mdp = bcrypt.hashSync(this.mdp, salt);
         const newClient = new ClientModel({ ...this })
-        return newClient.save();
+        return await newClient.save();
     }
 }
 
