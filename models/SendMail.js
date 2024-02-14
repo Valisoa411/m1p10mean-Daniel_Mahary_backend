@@ -20,7 +20,7 @@ class SendMail {
 
     // Corps du message avec le lien vers l'API
     const mailBody = `
-      Bonjour ${this.customer.name},
+      Bonjour ${this.customer.nom},
       Cliquez sur le lien suivant pour confirmer votre inscription : ${apiURL}
     `;
 

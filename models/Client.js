@@ -54,10 +54,14 @@ class Client {
         
     }
 
+    static async getAll() {
+        return ClientModel.find();
+    }
+
     async insert() {
         if (this.mdp.length < 8) throw new Error('"Le mot de passe doit contenir 8 charactères')
         const client = await ClientModel.findOne({ email: this.email })
-        // if (client) throw new Error('Email déja utilisé')
+        if (client) throw new Error('Email déja utilisé')
 
         const saltRounds = 10;
         const salt = bcrypt.genSaltSync(saltRounds);
@@ -85,7 +89,7 @@ class Client {
     static isTimeDifferenceWithin15Minutes(date1, date2) {
         const differenceInMilliseconds = Math.abs(date1 - date2);
         const differenceInMinutes = differenceInMilliseconds / (1000 * 60);
-        return differenceInMinutes <= 15;
+        return differenceInMinutes <= 5;
     }
       
       // Fonction principale pour vérifier la validité
