@@ -18,7 +18,7 @@ const verifyToken = (req, res, next) => {
   } catch (error) {
     console.log(error.message);
     if (error instanceof jwt.TokenExpiredError) {
-      return res.status(401).json({ error: 'Accès non autorisé. Token expiré.' });
+      return res.status(401).json({ error: 'Token expired' });
     } else {
       console.error('Erreur de vérification du token :', error);
       return res.status(401).json({ error: 'Accès non autorisé. Token invalide.' });

@@ -1,6 +1,7 @@
 const Client = require('../models/Client');
 const jwt = require('jsonwebtoken');
 const SendMail = require('../models/SendMail');
+const argon2 = require('argon2');
 
 module.exports = {
     async signUpClient(req, res) {
@@ -20,7 +21,7 @@ module.exports = {
                 mdp,
                 genre,
                 dateNaissance,
-                10,
+                0,
                 new Date()
             ).insert();
             mail= new SendMail(cli);
@@ -53,7 +54,7 @@ module.exports = {
 
       
           if (!inscriptionDateIsValid) {
-            return res.status(400).send({
+            return res.status(401).send({
               message: "Le lien d'inscription n'est plus valide. Veuillez refaire l'inscription.",
             });
           }
@@ -95,22 +96,41 @@ module.exports = {
           res.status(500).json({ error: 'Erreur lors de la récupération de la liste des clients.' });
         }
       },
-      async login(req, res) {
+      async signInClient(req, res) {
         try {
-          const {
-            nom,
-            prenom,
-            email,
-            mdp,
-            genre,
-            dateNaissance
-        } = req.body;
-          res.json(clients);
-        } catch (error) {
-          console.error('Erreur lors de la récupération de la liste des clients :', error);
-          res.status(500).json({ error: 'Erreur lors de la récupération de la liste des clients.' });
-        }
-      }
+          const { email, mdp } = req.body;
+  
+          // Vérification de l'existence de l'email dans la base de données
+          const existingClient = await Client.getByEmail(email);
+  
+          if (!existingClient) {
+              return res.status(400).json({ error: 'L\'email n\'existe pas dans la base de données. Veuillez vous inscrire.' });
+          }
+  
+          // Vérification de l'état du client
+          if (existingClient.etat !== 1) {
+              return res.status(400).json({ error: 'Votre compte n\'a pas encore été validé. Veuillez vérifier votre email.' });
+          }
+  
+          // Vérification du mot de passe
+          console.log(existingClient.mdp);
 
+          const isPasswordCorrect = await argon2.verify(existingClient.mdp, mdp);
+          if (!isPasswordCorrect) {
+              return res.status(401).json({ error: 'Mot de passe incorrect. Veuillez réessayer.' });
+          }
+  
+          // Génération du token
+          const payload = { idclient: existingClient._id };
+          const token = jwt.sign(payload, 'beauty', { expiresIn: '5m' });
+  
+          // Renvoi du token en cas de succès
+          res.status(200).json({ message: 'Connexion réussie.', token });
+      } catch (error) {
+          console.error('Erreur lors de la connexion :', error);
+          res.status(500).json({ error: 'Erreur interne du serveur.' });
+      }
+  
+    },
 
 }

@@ -1,6 +1,5 @@
-const bcrypt = require('bcrypt');
 const mongoose = require('../db/db');
-const { getById } = require('./Vehicule');
+const argon2 = require('argon2');
 
 const ClientSchema = new mongoose.Schema({
     nom: String,
@@ -58,14 +57,17 @@ class Client {
         return ClientModel.find();
     }
 
+    static async getByEmail(emaile){
+        return ClientModel.findOne({email: emaile});
+    }
+
     async insert() {
         if (this.mdp.length < 8) throw new Error('"Le mot de passe doit contenir 8 charactères')
         const client = await ClientModel.findOne({ email: this.email })
         if (client) throw new Error('Email déja utilisé')
 
-        const saltRounds = 10;
-        const salt = bcrypt.genSaltSync(saltRounds);
-        this.mdp = bcrypt.hashSync(this.mdp, salt);
+        const hashedPassword = await argon2.hash(this.mdp);
+        this.mdp=hashedPassword;
         const newClient = new ClientModel({ ...this })
         return newClient.save();
     }
