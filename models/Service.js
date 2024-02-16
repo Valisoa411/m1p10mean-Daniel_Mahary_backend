@@ -7,6 +7,7 @@ const ServiceSchema = new mongoose.Schema({
     commission: Number,
     description: String,
     photo: String,
+    nbEmploye: Number,
 })
 
 const ServiceModel = mongoose.model('Service', ServiceSchema);
@@ -19,6 +20,7 @@ class Service {
         commission = null,
         description = null,
         photo = null,
+        nbEmploye = null,
     ) {
         this.nom = nom;
         this.prix = prix;
@@ -26,50 +28,30 @@ class Service {
         this.commission = commission;
         this.description = description;
         this.photo = photo;
+        this.nbEmploye = nbEmploye;
     }
 
     async insert() {
-        try {
-            const newServiceMongoose = new ServiceModel({ ...this })
-            return await newServiceMongoose.save();
-        }
-        catch (error) {
-            throw error
-        }
+        const newServiceMongoose = new ServiceModel({ ...this })
+        return await newServiceMongoose.save();
     }
 
     async getAll() {
-        try {
-            const services = await ServiceModel.find().exec();
-            return services;
-        } catch (error) {
-            throw error;
-        }
+        const services = await ServiceModel.find().exec();
+        return services;
     }
 
     async getById() {
-        try {
-            const service = await ServiceModel.findById(this._id).exec();
-            return service;
-        } catch (error) {
-            throw error;
-        }
+        const service = await ServiceModel.findById(this._id).exec();
+        return service;
     }
-    
+
     async update() {
-        try {
-            await ServiceModel.findByIdAndUpdate(this._id, {...this});
-        } catch (error) {
-            throw error;
-        }
+        await ServiceModel.findByIdAndUpdate(this._id, { ...this });
     }
-    
+
     async delete() {
-        try {
-            await ServiceModel.findByIdAndDelete(this._id);
-        } catch (error) {
-            throw error;
-        }
+        await ServiceModel.findByIdAndDelete(this._id);
     }
 }
 

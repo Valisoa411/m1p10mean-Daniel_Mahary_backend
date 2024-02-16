@@ -3,8 +3,8 @@ const Service = require('../models/Service')
 module.exports = {
     async createService(req, res) {
         try {
-            const {nom, prix, duree, commission, description, photo} = req.body;
-            const service = await new Service(nom, prix, duree, commission, description, photo).insert();
+            const {nom, prix, duree, commission, description, photo, nbEmploye} = req.body;
+            const service = await new Service(nom, prix, duree, commission, description, photo, nbEmploye).insert();
             res.status(200).send({
                 message: "Service enregistrer avec succes",
                 service,
@@ -21,7 +21,6 @@ module.exports = {
         try {
             const services = await new Service().getAll();
             res.status(200).send({
-                message: "succes",
                 services,
             })
         } catch (error) {
@@ -37,7 +36,6 @@ module.exports = {
             service._id = req.params.id;
             service = await service.getById();
             res.status(200).send({
-                message: "succes",
                 service,
             })
         } catch (error) {
@@ -49,8 +47,8 @@ module.exports = {
 
     async updateService(req, res) {
         try {
-            const {_id, nom, prix, duree, commission, description, photo} = req.body;
-            const service = new Service(nom, prix, duree, commission, description, photo);
+            const {_id, nom, prix, duree, commission, description, photo, nbEmploye} = req.body;
+            const service = new Service(nom, prix, duree, commission, description, photo, nbEmploye);
             service._id = _id;
             await service.update();
             res.status(200).send({
@@ -70,7 +68,7 @@ module.exports = {
             service._id = req.params.id;
             await service.delete();
             res.status(200).send({
-                message: "succes",
+                message: "Service supprimer avec succes",
                 service,
             })
         } catch (error) {
