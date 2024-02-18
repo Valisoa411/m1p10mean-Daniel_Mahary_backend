@@ -16,12 +16,11 @@ class SendMail {
 
   async send() {
     // URL de l'API avec l'ID du client en tant que paramètre
-    const apiURL = `http://localhost:3000/test/hello/${this.customer._id}`;
+    const apiURL = `http://localhost:4200/validation/${this.customer._id}`;
 
     // Corps du message avec le lien vers l'API
     const mailBody = `
-      Bonjour ${this.customer.name},
-      
+      Bonjour ${this.customer.nom},
       Cliquez sur le lien suivant pour confirmer votre inscription : ${apiURL}
     `;
 
