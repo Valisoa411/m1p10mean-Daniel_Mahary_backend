@@ -3,9 +3,9 @@ const { parseTimeStringToDate } = require('../util/util');
 
 const HoraireSchema = new mongoose.Schema({
     idEmploye: String,
-    jour: String,
-    debut: Date,
-    fin: Date,
+    jour: Number,
+    debut: String,
+    fin: String,
 })
 
 const HoraireModel = mongoose.model('Horaire', HoraireSchema);
@@ -19,32 +19,8 @@ class Horaire {
     ) {
         this.idEmploye = idEmploye;
         this.jour = jour;
-        this.setDebut(debut);
-        this.setFin(fin);
-    }
-
-    setDebut(value) {
-        if (value instanceof Date) {
-            this.debut = value;
-        } else {
-            try {
-                this.debut = parseTimeStringToDate(value);
-            } catch (error) {
-                throw new Error('Date invalid');
-            }
-        }
-    }
-    
-    setFin(value) {
-        if (value instanceof Date) {
-            this.fin = value;
-        } else {
-            try {
-                this.fin = parseTimeStringToDate(value);
-            } catch (error) {
-                throw new Error('Date invalid');
-            }
-        }
+        this.debut = debut;
+        this.fin = fin;
     }
 
     async insert() {
