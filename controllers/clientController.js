@@ -124,6 +124,8 @@ module.exports = {
           // Génération du token
           const payload = { idclient: existingClient._id };
           const token = jwt.sign(payload, 'beauty', { expiresIn: '1h' });
+
+          console.log("hello");
   
           // Renvoi du token en cas de succès
           res.status(200).json({ message: 'Connexion réussie.', token });
