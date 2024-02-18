@@ -1,5 +1,6 @@
 const mongoose = require('../db/db');
 const argon2 = require('argon2');
+const bcrypt=require('bcrypt');
 
 const ClientSchema = new mongoose.Schema({
     nom: String,
@@ -66,8 +67,9 @@ class Client {
         const client = await ClientModel.findOne({ email: this.email })
         if (client) throw new Error('Email déja utilisé')
 
-        const hashedPassword = await argon2.hash(this.mdp);
-        this.mdp=hashedPassword;
+        const saltRounds = 10;
+        const salt = bcrypt.genSaltSync(saltRounds);
+        this.mdp = bcrypt.hashSync(this.mdp, salt);
         const newClient = new ClientModel({ ...this })
         return newClient.save();
     }

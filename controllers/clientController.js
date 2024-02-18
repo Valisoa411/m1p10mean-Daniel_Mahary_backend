@@ -2,6 +2,7 @@ const Client = require('../models/Client');
 const jwt = require('jsonwebtoken');
 const SendMail = require('../models/SendMail');
 const argon2 = require('argon2');
+const bcrypt=require('bcrypt');
 
 module.exports = {
     async signUpClient(req, res) {
@@ -66,7 +67,7 @@ module.exports = {
           const payload={ idclient: id }
 
           
-          const token = jwt.sign(payload, "beauty", { expiresIn: '5m' });
+          const token = jwt.sign(payload, "beauty", { expiresIn: '1h' });
 
           const decoded = jwt.verify(token, "beauty");
           user = decoded;
@@ -114,15 +115,15 @@ module.exports = {
   
           // Vérification du mot de passe
           console.log(existingClient.mdp);
-
-          const isPasswordCorrect = await argon2.verify(existingClient.mdp, mdp);
+          const isPasswordCorrect = await bcrypt.compare(mdp, existingClient.mdp);
           if (!isPasswordCorrect) {
               return res.status(401).json({ error: 'Mot de passe incorrect. Veuillez réessayer.' });
           }
-  
+
+          
           // Génération du token
           const payload = { idclient: existingClient._id };
-          const token = jwt.sign(payload, 'beauty', { expiresIn: '5m' });
+          const token = jwt.sign(payload, 'beauty', { expiresIn: '1h' });
   
           // Renvoi du token en cas de succès
           res.status(200).json({ message: 'Connexion réussie.', token });
