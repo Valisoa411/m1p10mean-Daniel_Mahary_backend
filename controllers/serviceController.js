@@ -10,7 +10,6 @@ module.exports = {
                 service,
             })
         } catch (error) {
-            console.log("createService error: ", error);
             res.status(500).send({
                 message: error.message
             })

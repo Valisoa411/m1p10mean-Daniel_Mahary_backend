@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const mongoose = require('../db/db');
 
 const ClientSchema = new mongoose.Schema({
-    _id: String,
     nom: String,
     prenom: String,
     email: String,
