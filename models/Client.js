@@ -71,7 +71,7 @@ class Client {
         const salt = bcrypt.genSaltSync(saltRounds);
         this.mdp = bcrypt.hashSync(this.mdp, salt);
         const newClient = new ClientModel({ ...this })
-        return newClient.save();
+        return await newClient.save();
     }
 
     static async update(id, updatedValues) {

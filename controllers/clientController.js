@@ -29,6 +29,7 @@ module.exports = {
             mail.send();
             res.status(200).send({
                 message: "Client inscrit avec succes",
+                client,
             });
         } catch (error) {
             res.status(500).send({
