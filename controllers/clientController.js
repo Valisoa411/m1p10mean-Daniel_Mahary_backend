@@ -1,7 +1,6 @@
 const Client = require('../models/Client');
 const jwt = require('jsonwebtoken');
 const SendMail = require('../models/SendMail');
-const argon2 = require('argon2');
 const bcrypt=require('bcrypt');
 
 module.exports = {

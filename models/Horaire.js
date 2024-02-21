@@ -1,14 +1,4 @@
-const mongoose = require('../db/db');
-const { parseTimeStringToDate } = require('../util/util');
-
-const HoraireSchema = new mongoose.Schema({
-    idEmploye: String,
-    jour: Number,
-    debut: String,
-    fin: String,
-})
-
-const HoraireModel = mongoose.model('Horaire', HoraireSchema);
+const HoraireModel = require('../schema/horaire.schema');
 
 class Horaire {
     constructor(

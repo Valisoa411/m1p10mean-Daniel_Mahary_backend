@@ -7,9 +7,11 @@ const horaireController = require('../controllers/horaireController');
 
 router.get('/:id', employeController.getEmployeById);
 
+router.get('/horaire/:idEmploye', employeController.getEmployeHoraires);
+
 router.post('/horaire', horaireController.createHoraire);
-router.get('/horaire/:id', horaireController.getHoraireById);
-router.get('/horaire', horaireController.allHoraires);
+
+router.get('/horaire/detail/:id', horaireController.getHoraireById);
 router.put('/horaire', horaireController.updateHoraire);
 router.delete('/horaire/:id', horaireController.deleteHoraire);
 

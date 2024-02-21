@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
+const HoraireModel = require('../schema/horaire.schema');
 
 const employeeSchema = new mongoose.Schema({
+  _id: { type: String },
   nom: { type: String, required: true },
   prenom: { type: String, required: true },
   cin: { type: Number, required: true },
@@ -12,19 +14,24 @@ const employeeSchema = new mongoose.Schema({
 
 const EmployeeModel = mongoose.model('Employee', employeeSchema);
 
-
-
 class Employe {
-  constructor(nom=null, prenom=null, cin=null, genre=null, login=null, mdp=null, photo=null) {
+  constructor(_id = null, nom = null, prenom = null, cin = null, genre = null, login = null, mdp = null, photo = null) {
+    this._id = _id;
     this.nom = nom;
     this.prenom = prenom;
     this.cin = cin;
-    this.genre=genre;
+    this.genre = genre;
     this.login = login;
     this.mdp = mdp;
     this.photo = photo;
   }
 
+  async getHoraires() {
+    const horaires = await HoraireModel.find({ idEmploye: this._id })
+      .sort({ jour: 1, debut: 1 }) // Sort by jour in ascending order, then debut in ascending order
+      .exec();
+    return horaires;
+  }
 
   async insert() {
     const employee = new EmployeeModel({ ...this });
@@ -48,4 +55,4 @@ class Employe {
   }
 }
 
-module.exports =  Employe ;
+module.exports = Employe;

@@ -2,7 +2,6 @@ const Client = require('../models/Client');
 const jwt = require('jsonwebtoken');
 const SendMail = require('../models/SendMail');
 const Employe = require('../models/Employe');
-const argon2 = require('argon2');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const bcrypt=require('bcrypt');
