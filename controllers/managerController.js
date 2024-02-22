@@ -5,6 +5,7 @@ const Employe = require('../models/Employe');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const bcrypt=require('bcrypt');
+const Manager = require('../models/Manager');
 
 
 cloudinary.config({
@@ -112,9 +113,11 @@ module.exports = {
                 login,
                 mdp
             ).loginManager();
+            const payload = {idmanager: manager._id, role:'manager'}
+            const token = jwt.sign(payload, 'beauty', { expiresIn: '1h' });
             res.status(200).send({
                 message: "Manager connecte avec succes",
-                manager,
+                token,
             });
         } catch (error) {
             console.log("loginManager error: ", error);

@@ -122,7 +122,7 @@ module.exports = {
 
           
           // Génération du token
-          const payload = { idclient: existingClient._id };
+          const payload = { idclient: existingClient._id, role: 'client' };
           const token = jwt.sign(payload, 'beauty', { expiresIn: '1h' });
 
           console.log("hello");
