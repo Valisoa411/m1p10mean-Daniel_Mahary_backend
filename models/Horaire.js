@@ -1,4 +1,5 @@
 const HoraireModel = require('../schema/horaire.schema');
+const { horaireGeneral } = require('../util/data');
 
 class Horaire {
     constructor(
@@ -15,11 +16,16 @@ class Horaire {
     setPlage(debut, fin) {
         const debutTime = new Date(`2000-01-01T${debut}`);
         const finTime = new Date(`2000-01-01T${fin}`);
+        const { ouverture, fermeture } = horaireGeneral;
         if (debutTime > finTime) {
-            throw new Error('Le début de l\'horaire doit être avant la fin');
+            throw new Error("Le début de l'horaire doit être avant la fin");
         }
-        this.debut = debut;
-        this.fin = fin;
+        if(debut>ouverture && fin<fermeture){
+            this.debut = debut;
+            this.fin = fin;
+        } else {
+            throw new Error("Horaire hors de l'horaire du salon");
+        }
     }
 
     async checkAvailability() {

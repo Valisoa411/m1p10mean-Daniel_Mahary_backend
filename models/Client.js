@@ -1,5 +1,5 @@
 const mongoose = require('../db/db');
-const bcrypt=require('bcrypt');
+const bcrypt = require('bcrypt');
 
 const ClientSchema = new mongoose.Schema({
     nom: String,
@@ -23,7 +23,7 @@ class Client {
         genre = null,
         dateNaissance = null,
         etat = null,
-        dateInscription= null
+        dateInscription = null
     ) {
         this.nom = nom;
         this.prenom = prenom;
@@ -31,34 +31,30 @@ class Client {
         this.mdp = mdp;
         this.genre = genre;
         this.etat = etat;
-        this.dateInscription= dateInscription
+        this.dateInscription = dateInscription
 
         this.setDateNaissance(dateNaissance)
     }
 
     setDateNaissance(value) {
-        if (value instanceof Date) {
-            this.dateNaissance = value;
-        } else {
-            try {
-                this.dateNaissance = new Date(value);
-            } catch (error) {
-                throw new Error('Date de naissance invalid');
-            }
+        try {
+            this.dateNaissance = new Date(value);
+        } catch (error) {
+            throw new Error('Date de naissance invalid');
         }
         if (this.dateNaissance.getTime() > new Date().getTime()) {
             this.dateNaissance = null;
             throw new Error('Date de naissance doit être antérieure à la date actuelle');
         }
-        
+
     }
 
     static async getAll() {
         return ClientModel.find();
     }
 
-    static async getByEmail(emaile){
-        return ClientModel.findOne({email: emaile});
+    static async getByEmail(emaile) {
+        return ClientModel.findOne({ email: emaile });
     }
 
     async insert() {
@@ -77,7 +73,7 @@ class Client {
         return ClientModel.findByIdAndUpdate(id, updatedValues, { new: true });
     }
 
-    static async getById(id){
+    static async getById(id) {
         return ClientModel.findById(id);
     }
 
@@ -87,43 +83,43 @@ class Client {
         console.log(client)
         return client ? client.dateInscription : null;
     }
-      
-      // Fonction pour vérifier si la différence entre deux dates est inférieure ou égale à 15 minutes
+
+    // Fonction pour vérifier si la différence entre deux dates est inférieure ou égale à 15 minutes
     static isTimeDifferenceWithin15Minutes(date1, date2) {
         const differenceInMilliseconds = Math.abs(date1 - date2);
         const differenceInMinutes = differenceInMilliseconds / (1000 * 60);
         return differenceInMinutes <= 5;
     }
-      
-      // Fonction principale pour vérifier la validité
+
+    // Fonction principale pour vérifier la validité
     static async isValid(id) {
         try {
-          const inscriptionDate = await Client.getInscriptionDateById(id);
+            const inscriptionDate = await Client.getInscriptionDateById(id);
 
-          console.log(inscriptionDate)
-      
-          if (inscriptionDate) {
-            const currentDate = new Date();
-            const isValidTime = Client.isTimeDifferenceWithin15Minutes(currentDate, new Date(inscriptionDate));
-      
-            if (isValidTime) {
-              console.log("La différence est inférieure ou égale à 15 minutes. La validation est réussie.");
-              // Faites quelque chose ici, par exemple, renvoyez true
-              return true;
+            console.log(inscriptionDate)
+
+            if (inscriptionDate) {
+                const currentDate = new Date();
+                const isValidTime = Client.isTimeDifferenceWithin15Minutes(currentDate, new Date(inscriptionDate));
+
+                if (isValidTime) {
+                    console.log("La différence est inférieure ou égale à 15 minutes. La validation est réussie.");
+                    // Faites quelque chose ici, par exemple, renvoyez true
+                    return true;
+                } else {
+                    console.log("La différence est supérieure à 15 minutes. La validation a échoué.");
+                    // Faites quelque chose ici, par exemple, renvoyez false
+                    return false;
+                }
             } else {
-              console.log("La différence est supérieure à 15 minutes. La validation a échoué.");
-              // Faites quelque chose ici, par exemple, renvoyez false
-              return false;
+                console.log("Date d'inscription non trouvée. La validation a échoué.");
+                // Faites quelque chose ici, par exemple, renvoyez false
+                return false;
             }
-          } else {
-            console.log("Date d'inscription non trouvée. La validation a échoué.");
-            // Faites quelque chose ici, par exemple, renvoyez false
-            return false;
-          }
         } catch (error) {
-          console.error("Une erreur s'est produite lors de la validation :", error);
-          // Gérer l'erreur selon vos besoins
-          return false;
+            console.error("Une erreur s'est produite lors de la validation :", error);
+            // Gérer l'erreur selon vos besoins
+            return false;
         }
     }
 

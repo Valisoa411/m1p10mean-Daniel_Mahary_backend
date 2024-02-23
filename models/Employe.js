@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const HoraireModel = require('../schema/horaire.schema');
+const { HoraireModel } = require('../schema/horaire.schema');
 
 const employeeSchema = new mongoose.Schema({
   _id: { type: String },

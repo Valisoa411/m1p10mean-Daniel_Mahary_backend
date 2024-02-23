@@ -23,6 +23,8 @@ const upload = multer({ storage: storage });
 // router.post('/init', managerController.initManager);
 router.post('/login', managerController.loginManager);
 
+router.get('/service', serviceController.allServices);
+
 const routerManager = () => {
   const routerMan = express.Router();
 
@@ -33,7 +35,6 @@ const routerManager = () => {
 
   routerMan.post('/service', serviceController.createService);
   routerMan.get('/service/:id', serviceController.getServiceById);
-  routerMan.get('/service', serviceController.allServices);
   routerMan.put('/service', serviceController.updateService);
   routerMan.delete('/service/:id', serviceController.deleteService);
 
@@ -41,7 +42,6 @@ const routerManager = () => {
 
   return routerMan;
 }
-
 router.use(verifyToken('manager'), routerManager());
 
 module.exports = router;

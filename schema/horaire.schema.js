@@ -7,4 +7,7 @@ const HoraireSchema = new mongoose.Schema({
     fin: String,
 })
 
-module.exports = mongoose.model('Horaire', HoraireSchema);
+module.exports = {
+    HoraireSchema,
+    HoraireModel: mongoose.model('Horaire', HoraireSchema),
+};

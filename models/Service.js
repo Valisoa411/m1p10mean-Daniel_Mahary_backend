@@ -31,6 +31,15 @@ class Service {
         this.nbEmploye = nbEmploye;
     }
 
+    async freeHoraireOfDay(selectedDate) {
+        const query = {
+            date: selectedDate
+        }
+        const someRendezVous = RendezVousModel.find(query).exec();
+        
+    }
+
+
     async insert() {
         const newServiceMongoose = new ServiceModel({ ...this })
         return await newServiceMongoose.save();
