@@ -2,7 +2,8 @@
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'beauty'; // Remplacez par votre clé secrète
 
-const verifyToken = (req, res, next) => {
+const verifyToken = (role) => (req, res, next) => {
+
   const token = req.header('Authorization');
 
   if (!token) {
@@ -10,9 +11,12 @@ const verifyToken = (req, res, next) => {
   }
 
   try {
-    console.log(token);
+    // console.log(token);
     const decoded = jwt.verify(token, "beauty");
-    console.log(decoded)
+    const userRole = decoded.role;
+    if(userRole !== role) {
+      return res.status(401).json({ error: 'Ressources non autorisés' });
+    }
     req.user = decoded; // Stocke le payload dans req.user
     next();
   } catch (error) {

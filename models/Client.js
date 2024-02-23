@@ -1,5 +1,4 @@
 const mongoose = require('../db/db');
-const argon2 = require('argon2');
 const bcrypt=require('bcrypt');
 
 const ClientSchema = new mongoose.Schema({
@@ -35,6 +34,7 @@ class Client {
         this.dateInscription= dateInscription
 
         this.setDateNaissance(dateNaissance)
+        console.log("hello")
     }
 
     setDateNaissance(value) {

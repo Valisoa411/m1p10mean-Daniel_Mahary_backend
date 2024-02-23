@@ -2,7 +2,6 @@ const Client = require('../models/Client');
 const jwt = require('jsonwebtoken');
 const SendMail = require('../models/SendMail');
 const Employe = require('../models/Employe');
-const argon2 = require('argon2');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const bcrypt=require('bcrypt');
@@ -102,7 +101,6 @@ module.exports = {
             })
         }
     },
-
     async loginManager(req,res) {
         try {
             const {
@@ -122,6 +120,19 @@ module.exports = {
             res.status(500).send({
                 message: error.message
             })
+        }
+    },
+    async searchEmploye(req, res) {
+        try {
+          const { q } = req.query;
+    
+          // Utiliser la méthode statique searchElastic de votre modèle Employe
+          const result = await Employe.searchElastic(q);
+    
+          res.status(200).json(result);
+        } catch (error) {
+          console.error('Erreur lors de la recherche d\'employés :', error);
+          res.status(500).json({ error: 'Erreur lors de la recherche d\'employés.' });
         }
     }
 }

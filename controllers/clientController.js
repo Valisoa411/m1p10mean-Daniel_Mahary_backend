@@ -1,7 +1,6 @@
 const Client = require('../models/Client');
 const jwt = require('jsonwebtoken');
 const SendMail = require('../models/SendMail');
-const argon2 = require('argon2');
 const bcrypt=require('bcrypt');
 
 module.exports = {
@@ -65,7 +64,7 @@ module.exports = {
           const updatedValues = { "etat": 1 };
           const updatedClient = await Client.update(id, updatedValues);
 
-          const payload={ idclient: id }
+          const payload={ idclient: id,role: "client" }
 
           
           const token = jwt.sign(payload, "beauty", { expiresIn: '1h' });

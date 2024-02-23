@@ -37,4 +37,13 @@ router.delete('/service/:id', serviceController.deleteService);
 
 router.post('/employe', employeController.createEmploye);
 
+const routerManager = () => {
+  const routerManager = express.Router();
+  //route qui a besoin d'authentification client
+  routerManager.get('/search', managerController.searchEmploye);
+  return routerManager;
+}
+
+router.use(routerManager());
+
 module.exports = router;

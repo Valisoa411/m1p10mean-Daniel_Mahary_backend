@@ -7,7 +7,8 @@ const employeeSchema = new mongoose.Schema({
   genre: { type: String, required: true },
   login: { type: String, required: true, unique: true },
   mdp: { type: String, required: true },
-  photo: { type: String }
+  photo: { type: String },
+  matricule: { type : String }
 });
 
 const EmployeeModel = mongoose.model('Employee', employeeSchema);
@@ -25,10 +26,42 @@ class Employe {
     this.photo = photo;
   }
 
-
   async insert() {
+    // Vérifier s'il y a des employés dans la collection
+    const count = await EmployeeModel.countDocuments();
+
+    // Calculer le nouveau matricule
+    const newMatricule = count === 0 ? 1 : await Employe.calculateNextMatricule();
+
+    // Ajouter le nouveau matricule à l'employé
+    this.matricule = newMatricule;
+
+    // Créer et enregistrer l'employé
     const employee = new EmployeeModel({ ...this });
     return await employee.save();
+
+  }
+
+  static async searchElastic(term) {
+    const searchQuery = {
+      $or: [
+        { nom: { $regex: new RegExp(term, 'i') } }, // Recherche insensible à la casse pour le nom
+        { prenom: { $regex: new RegExp(term, 'i') } }, // Recherche insensible à la casse pour le prénom
+        { matricule: term },
+        { login: { $regex: new RegExp(term, 'i') }} // Recherche exacte pour le matricule
+      ]
+    };
+
+    return await EmployeeModel.find(searchQuery);
+  }
+  // Méthode pour calculer le matricule suivant en fonction du maximum actuel
+  static async calculateNextMatricule() {
+    const maxMatriculeEmployee = await EmployeeModel
+      .findOne({}, { matricule: 1 })
+      .sort({ matricule: -1 }); // Trier par ordre décroissant pour obtenir le maximum
+
+    // Si aucun employé n'est présent, commencer à partir de 1
+    return maxMatriculeEmployee ? parseInt(maxMatriculeEmployee.matricule) + 1 : 1;
   }
 
   static async getAllEmployees() {
