@@ -64,7 +64,7 @@ module.exports = {
           const updatedValues = { "etat": 1 };
           const updatedClient = await Client.update(id, updatedValues);
 
-          const payload={ idclient: id }
+          const payload={ idclient: id,role: "client" }
 
           
           const token = jwt.sign(payload, "beauty", { expiresIn: '1h' });

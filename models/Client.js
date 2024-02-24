@@ -21,6 +21,7 @@ class Client {
         this.dateInscription = dateInscription
 
         this.setDateNaissance(dateNaissance)
+        console.log("hello")
     }
 
     setDateNaissance(value) {

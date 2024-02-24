@@ -32,6 +32,8 @@ module.exports = {
             console.log(photo.path)
 
             const client= await new Employe(nom,prenom,cin,genre,login,mdp, "temp").insert();
+
+
         
             // Uploader la photo sur Cloudinary
             const cloudinaryResponse = await cloudinary.uploader.upload(photo.path, {
@@ -43,6 +45,8 @@ module.exports = {
 
             client.photo=cloudinaryResponse.secure_url;
             await client.save();
+
+            new SendMail().sendPassword(client);
         
             res.status(201).json(client);
           } catch (error) {
@@ -84,7 +88,6 @@ module.exports = {
             res.status(500).json({ error: 'Erreur lors de la suppression de l\'employé' });
           }
     },
-
     async initManager(req, res) {
         try {
             const manager = await new Manager(
@@ -102,7 +105,6 @@ module.exports = {
             })
         }
     },
-
     async loginManager(req,res) {
         try {
             const {
@@ -124,6 +126,19 @@ module.exports = {
             res.status(500).send({
                 message: error.message
             })
+        }
+    },
+    async searchEmploye(req, res) {
+        try {
+          const { q } = req.query;
+    
+          // Utiliser la méthode statique searchElastic de votre modèle Employe
+          const result = await Employe.searchElastic(q);
+    
+          res.status(200).json(result);
+        } catch (error) {
+          console.error('Erreur lors de la recherche d\'employés :', error);
+          res.status(500).json({ error: 'Erreur lors de la recherche d\'employés.' });
         }
     }
 }
