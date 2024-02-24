@@ -17,6 +17,8 @@ const verifyToken = (role) => (req, res, next) => {
     if(userRole !== role) {
       return res.status(401).json({ error: 'Ressources non autorisés' });
     }
+    console.log(userRole);
+    console.log(role);
     req.user = decoded; // Stocke le payload dans req.user
     next();
   } catch (error) {

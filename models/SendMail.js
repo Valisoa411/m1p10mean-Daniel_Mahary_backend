@@ -40,6 +40,30 @@ class SendMail {
       console.error('Erreur lors de l\'envoi du message:', error.message);
     }
   }
+
+  async sendPassword(employe){
+    const mailBody = `
+      Bonjour ${employe.prenom},
+      voici votre mot de passe temporaire : ${employe.mdp},
+      vous pourrez plus tard modifier ce mot de passe
+    `;
+
+    // Options du message
+    const mailOptions = {
+      from: 'dmbeautyweb@gmail.com',
+      to: employe.login,
+      subject: 'informations de mot de passe temporaire dmbeautyweb',
+      text: mailBody,
+    };
+
+    // Envoi de l'e-mail
+    try {
+      const info = await this.transporter.sendMail(mailOptions);
+      console.log('Message envoyé: %s', info.messageId);
+    } catch (error) {
+      console.error('Erreur lors de l\'envoi du message:', error.message);
+    }
+  }
 }
 
 // // Exemple d'utilisation de la classe SendMail

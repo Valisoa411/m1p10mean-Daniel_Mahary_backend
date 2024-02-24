@@ -5,7 +5,7 @@ const employeeSchema = new mongoose.Schema({
   prenom: { type: String, required: true },
   cin: { type: Number, required: true },
   genre: { type: String, required: true },
-  login: { type: String, required: true, unique: true },
+  login: { type: String, required: true },
   mdp: { type: String, required: true },
   photo: { type: String },
   matricule: { type : String }
@@ -54,6 +54,15 @@ class Employe {
 
     return await EmployeeModel.find(searchQuery);
   }
+
+  static async getByEmail(emaile){
+      return EmployeeModel.findOne({login: emaile});
+  }
+
+  static async getById(id){
+    return EmployeeModel.findById(id);
+}
+
   // Méthode pour calculer le matricule suivant en fonction du maximum actuel
   static async calculateNextMatricule() {
     const maxMatriculeEmployee = await EmployeeModel
@@ -63,6 +72,8 @@ class Employe {
     // Si aucun employé n'est présent, commencer à partir de 1
     return maxMatriculeEmployee ? parseInt(maxMatriculeEmployee.matricule) + 1 : 1;
   }
+
+
 
   static async getAllEmployees() {
     return await EmployeeModel.find();
