@@ -1,4 +1,6 @@
-export const horaireGeneral = {
-    overture: '08:00',
-    fermeture: '18:00',
+module.exports = {
+    horaireGeneral: {
+        ouverture: '08:00',
+        fermeture: '18:00',
+    }
 }

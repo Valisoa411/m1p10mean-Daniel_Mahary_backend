@@ -10,6 +10,7 @@ module.exports = {
                 horaire,
             })
         } catch (error) {
+            console.log(error);
             res.status(500).send({
                 message: error.message
             })

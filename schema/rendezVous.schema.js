@@ -8,7 +8,7 @@ const RendezVousSchema = new mongoose.Schema({
     client: ClientSchema,
     service: ServiceSchema,
     date: Date,
-    employes: [EmployeeSchema],
+    employes: [Object],
     prixFinal: Number,
     etat: String,
 })

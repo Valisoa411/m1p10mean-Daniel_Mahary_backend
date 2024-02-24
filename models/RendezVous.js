@@ -19,6 +19,11 @@ class RendezVous {
         this.etat = etat;
     }
 
-    
+    async insert() {
+        const newRendezVousMongoose = new RendezVousModel({...this});
+        return await newRendezVousMongoose.save();
+    }
 
 }
+
+module.exports = RendezVous;

@@ -1,4 +1,4 @@
-const HoraireModel = require('../schema/horaire.schema');
+const { HoraireModel } = require('../schema/horaire.schema');
 const { horaireGeneral } = require('../util/data');
 
 class Horaire {
@@ -20,10 +20,12 @@ class Horaire {
         if (debutTime > finTime) {
             throw new Error("Le début de l'horaire doit être avant la fin");
         }
-        if(debut>ouverture && fin<fermeture){
+        if(debut>=ouverture && fin<=fermeture){
             this.debut = debut;
             this.fin = fin;
         } else {
+            console.log('general', ouverture, fermeture);
+            console.log('new', debut, fin);
             throw new Error("Horaire hors de l'horaire du salon");
         }
     }

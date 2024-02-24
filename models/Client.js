@@ -1,18 +1,5 @@
-const mongoose = require('../db/db');
 const bcrypt = require('bcrypt');
-
-const ClientSchema = new mongoose.Schema({
-    nom: String,
-    prenom: String,
-    email: String,
-    mdp: String,
-    genre: String,
-    dateNaissance: Date,
-    etat: Number,
-    dateInscription: Date
-})
-
-const ClientModel = mongoose.model('Client', ClientSchema);
+const { ClientModel } = require('../schema/client.schema');
 
 class Client {
     constructor(

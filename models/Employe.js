@@ -1,18 +1,5 @@
-const mongoose = require('mongoose');
+const { EmployeeModel } = require('../schema/employe.schema');
 const { HoraireModel } = require('../schema/horaire.schema');
-
-const employeeSchema = new mongoose.Schema({
-  _id: { type: String },
-  nom: { type: String, required: true },
-  prenom: { type: String, required: true },
-  cin: { type: Number, required: true },
-  genre: { type: String, required: true },
-  login: { type: String, required: true, unique: true },
-  mdp: { type: String, required: true },
-  photo: { type: String }
-});
-
-const EmployeeModel = mongoose.model('Employee', employeeSchema);
 
 class Employe {
   constructor(_id = null, nom = null, prenom = null, cin = null, genre = null, login = null, mdp = null, photo = null) {

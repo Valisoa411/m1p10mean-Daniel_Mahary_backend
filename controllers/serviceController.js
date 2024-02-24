@@ -1,6 +1,44 @@
 const Service = require('../models/Service')
 
 module.exports = {
+    async getAvailableHoraire(req, res) {
+        try {
+            const { idService, selectedDate } = req.query;
+            const result = await new Service(idService).getById();
+            const service = new Service();
+            service.duree = result.duree;
+            service.nbEmploye = result.nbEmploye
+            const availabilities = await service.availableHoraire(selectedDate);
+            res.status(200).send({
+                availabilities,
+            })
+        } catch (error) {
+            // console.log(error);
+            res.status(500).send({
+                message: error.message
+            })
+        }
+    },
+
+    async getAvailableEmploye(req, res) {
+        try {
+            const { idService, selectedDate } = req.query;
+            const result = await new Service(idService).getById();
+            const service = new Service();
+            service.duree = result.duree;
+            const employees = await service.availableEmploye(selectedDate);
+            res.status(200).send({
+                employees,
+            })
+        } catch (error) {
+            res.status(500).send({
+                message: error.message
+            })
+        }
+    },
+
+
+
     async createService(req, res) {
         try {
             const {nom, prix, duree, commission, description, photo, nbEmploye} = req.body;

@@ -6,7 +6,11 @@ const EmployeeSchema = new mongoose.Schema({
   prenom: { type: String, required: true },
   cin: { type: Number, required: true },
   genre: { type: String, required: true },
-  login: { type: String, required: true, unique: true },
+  login: { 
+    type: String, 
+    required: true, 
+    unique: false 
+  },
   mdp: { type: String, required: true },
   photo: { type: String }
 });

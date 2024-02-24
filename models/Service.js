@@ -1,19 +1,14 @@
-const mongoose = require('../db/db');
-
-const ServiceSchema = new mongoose.Schema({
-    nom: String,
-    prix: Number,
-    duree: Number,
-    commission: Number,
-    description: String,
-    photo: String,
-    nbEmploye: Number,
-})
-
-const ServiceModel = mongoose.model('Service', ServiceSchema);
+const { ObjectId } = require('mongoose').Types;
+const { EmployeeModel } = require('../schema/employe.schema');
+const { HoraireModel } = require('../schema/horaire.schema');
+const { RendezVousModel } = require('../schema/rendezVous.schema');
+const { ServiceModel } = require('../schema/service.schema');
+const { horaireGeneral } = require('../util/data');
+const { distributeAvailability, parseDateToTimeString, addDuree, getTimeString, getMinuteDifference, parseTimeStringToDate } = require('../util/util');
 
 class Service {
     constructor(
+        _id = null,
         nom = null,
         prix = null,
         duree = null,
@@ -22,6 +17,7 @@ class Service {
         photo = null,
         nbEmploye = null,
     ) {
+        this._id = _id;
         this.nom = nom;
         this.prix = prix;
         this.duree = duree;
@@ -31,12 +27,156 @@ class Service {
         this.nbEmploye = nbEmploye;
     }
 
-    async freeHoraireOfDay(selectedDate) {
-        const query = {
-            date: selectedDate
+    async availableHoraire(selectedDate) {
+        const { ouverture, fermeture } = horaireGeneral;
+        const day = new Date(selectedDate).getDay();
+        const horaireQuery = {
+            jour: day,
         }
-        const someRendezVous = RendezVousModel.find(query).exec();
-        
+        const HoraireOfDay = await HoraireModel.find(horaireQuery).exec();
+        console.log("HoraireOfDay: ", HoraireOfDay);
+        const rendezVousPipeline = [
+            {
+                $addFields: {
+                    formattedDate: {
+                        $dateToString: {
+                            date: '$date',
+                            format: '%Y-%m-%d'
+                        }
+                    }
+                }
+            },
+            {
+                $match: {
+                    formattedDate: selectedDate
+                }
+            },
+        ];
+        const RendezVousOfDay = await RendezVousModel.aggregate(rendezVousPipeline).exec();
+        console.log("selectedDate: ", selectedDate);
+        console.log("RendezVousOfDay: ", RendezVousOfDay);
+        let availability = [
+            {
+                debut: ouverture,
+                fin: fermeture,
+                dispo: 0,
+            }
+        ]
+        console.log("availability0: ", availability);
+        HoraireOfDay.forEach((horaire) => {
+            availability = distributeAvailability(availability, {
+                debut: horaire.debut,
+                fin: horaire.fin,
+                change: 1,
+            })
+        })
+        console.log("availability1: ", availability);
+        RendezVousOfDay.forEach((rendezVous) => {
+            const rdvStart = new Date(rendezVous.date);
+            const rdvEnd = addDuree(rdvStart, rendezVous.service.duree);
+            availability = distributeAvailability(availability, {
+                debut: getTimeString(rdvStart),
+                fin: getTimeString(rdvEnd),
+                change: -rendezVous.service.nbEmploye,
+            })
+        })
+        console.log("availability2: ", availability);
+        const result = availability.filter(slot => {
+            if (slot.dispo >= this.nbEmploye) {
+                const freeTime = getMinuteDifference(slot.debut, slot.fin);
+                if (freeTime >= this.duree) return true;
+            }
+        }).map((slot) => {
+            const slotEnd = parseTimeStringToDate(slot.fin);
+            slotEnd.setMinutes(slotEnd.getMinutes() - this.duree)
+            return {
+                debut: slot.debut,
+                fin: getTimeString(slotEnd),
+                slot: slot.dispo,
+            }
+        })
+        return result;
+    }
+
+    //check and test compact version in random_function
+    async availableEmploye(selectedDate) {
+        const rdvStart = new Date(selectedDate);
+        const rdvEnd = addDuree(rdvStart, this.duree);
+        const duree = this.duree;
+        const horairePipeline = [
+            {
+                $match: {
+                    jour: rdvStart.getDay() + 1,
+                    $or: [
+                        {
+                            $and: [
+                                { 'debut': { $lte: rdvStart.toTimeString().slice(0, 5) } },
+                                { 'fin': { $gt: rdvStart.toTimeString().slice(0, 5) } }
+                            ]
+                        },
+                        {
+                            $and: [
+                                { 'debut': { $lt: rdvEnd.toTimeString().slice(0, 5) } },
+                                { 'fin': { $gte: rdvEnd.toTimeString().slice(0, 5) } }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    idEmploye: 1
+                }
+            }
+        ];
+        const horaireResult = await HoraireModel.aggregate(horairePipeline).exec();
+        const idEmployeList = horaireResult.map(horaire => horaire.idEmploye);
+        // console.log("idEmployeList: ", idEmployeList);
+        const rendezVousPipeline = [
+            {
+                $addFields: {
+                    endDate: { $add: ["$date", { $multiply: [60000, this.duree] }] }
+                }
+            },
+            {
+                $match: {
+                    date: { $lte: rdvEnd },
+                    endDate: { $gte: rdvStart }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    employes: 1
+                }
+            },
+            {
+                $unwind: "$employes"
+            },
+            {
+                $group: {
+                    _id: "$employes._id"
+                }
+            }
+        ];
+        const rendezVousResult = await RendezVousModel.aggregate(rendezVousPipeline).exec();
+        const idEmployeOccupiedList = rendezVousResult.map(rendezVous => rendezVous.idEmploye);
+        // console.log("idEmployeOccupiedList: ", idEmployeOccupiedList);
+        const idEmployeAvailableList = idEmployeList
+        .filter(id => !idEmployeOccupiedList.includes(id))
+        .map(id => new ObjectId(id));
+        // console.log("idEmployeAvailableList: ", idEmployeAvailableList);
+        const pipeline = [
+            {
+                $match: {
+                    _id: { $in: idEmployeAvailableList }
+                }
+            },
+        ]
+        const result = await EmployeeModel.aggregate(pipeline);
+        console.log("result: ", result);
+        return result;
     }
 
 
