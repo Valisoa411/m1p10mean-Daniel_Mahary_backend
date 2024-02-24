@@ -40,17 +40,11 @@ const routerManager = () => {
 
   routerMan.post('/employe', employeController.createEmploye);
 
+  routerMan.get('/search', managerController.searchEmploye);
+
   return routerMan;
 }
 router.use(verifyToken('manager'), routerManager());
 
-const routerManager = () => {
-  const routerManager = express.Router();
-  //route qui a besoin d'authentification client
-  routerManager.get('/search', managerController.searchEmploye);
-  return routerManager;
-}
-
-router.use(routerManager());
 
 module.exports = router;
