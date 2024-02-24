@@ -1,9 +1,9 @@
 const { EmployeeModel } = require('../schema/employe.schema');
 const { HoraireModel } = require('../schema/horaire.schema');
+const bcrypt= require("bcrypt");
 
 class Employe {
-  constructor(_id = null, nom = null, prenom = null, cin = null, genre = null, login = null, mdp = null, photo = null) {
-    this._id = _id;
+  constructor(nom = null, prenom = null, cin = null, genre = null, login = null, mdp = null, photo = null) {
     this.nom = nom;
     this.prenom = prenom;
     this.cin = cin;
@@ -29,6 +29,10 @@ class Employe {
 
     // Ajouter le nouveau matricule à l'employé
     this.matricule = newMatricule;
+
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    this.mdp = bcrypt.hashSync(this.mdp, salt);
 
     // Créer et enregistrer l'employé
     const employee = new EmployeeModel({ ...this });

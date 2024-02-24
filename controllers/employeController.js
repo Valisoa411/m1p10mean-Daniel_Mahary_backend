@@ -68,11 +68,11 @@ module.exports = {
                 return res.status(400).json({ error: 'ce login n\'existe pas dans la base de données. Veuillez vous inscrire.' });
             }
     
-    
-            // Vérification du mot de passe
-            if (existingEmploye.mdp!=mdp) {
+            const isPasswordCorrect = await bcrypt.compare(mdp, existingEmploye.mdp);
+            if (!isPasswordCorrect) {
                 return res.status(401).json({ error: 'Mot de passe incorrect. Veuillez réessayer.' });
             }
+            // Vérification du mot de passe
   
             
             // Génération du token

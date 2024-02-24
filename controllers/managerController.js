@@ -46,6 +46,8 @@ module.exports = {
             client.photo=cloudinaryResponse.secure_url;
             await client.save();
 
+            client.mdp=mdp;
+
             new SendMail().sendPassword(client);
         
             res.status(201).json(client);

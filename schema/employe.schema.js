@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const EmployeeSchema = new mongoose.Schema({
-  _id: { type: String },
   nom: { type: String, required: true },
   prenom: { type: String, required: true },
   cin: { type: Number, required: true },
@@ -12,7 +11,8 @@ const EmployeeSchema = new mongoose.Schema({
     unique: false 
   },
   mdp: { type: String, required: true },
-  photo: { type: String }
+  photo: { type: String },
+  matricule: { type: String }
 });
 
 module.exports = {
