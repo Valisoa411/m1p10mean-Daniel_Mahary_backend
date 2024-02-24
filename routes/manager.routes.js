@@ -9,6 +9,7 @@ const employeController = require('../controllers/employeController');
 const verifyToken = require('../middleware/tokenmiddleware');
 
 const multer = require('multer');
+const offreSpecialController = require('../controllers/offreSpecialController');
 
 // Configuration Multer pour le téléchargement de fichiers
 const storage = multer.diskStorage({
@@ -33,17 +34,24 @@ const routerManager = () => {
   routerMan.get('/listEmploye', managerController.liste_employe);
   routerMan.delete('/deleteEmploye/:id', managerController.delete_employe);
 
+  routerMan.post('/employe', employeController.createEmploye);
+  
+  routerMan.get('/search', managerController.searchEmploye);
+
   routerMan.post('/service', serviceController.createService);
   routerMan.get('/service/:id', serviceController.getServiceById);
   routerMan.put('/service', serviceController.updateService);
   routerMan.delete('/service/:id', serviceController.deleteService);
 
-  routerMan.post('/employe', employeController.createEmploye);
-
-  routerMan.get('/search', managerController.searchEmploye);
+  routerMan.post('/offreSpecial', offreSpecialController.createOffreSpecial);
+  routerMan.post('/offreSpecial', offreSpecialController.createOffreSpecial);
+  routerMan.get('/offreSpecial/:id', offreSpecialController.getOffreSpecialById);
+  routerMan.put('/offreSpecial', offreSpecialController.updateOffreSpecial);
+  routerMan.delete('/offreSpecial/:id', offreSpecialController.deleteOffreSpecial);
 
   return routerMan;
 }
+
 router.use(verifyToken('manager'), routerManager());
 
 

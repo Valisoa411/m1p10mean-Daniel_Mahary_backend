@@ -28,7 +28,6 @@ module.exports = {
             mail.send();
             res.status(200).send({
                 message: "Client inscrit avec succes",
-                client,
             });
         } catch (error) {
             res.status(500).send({
@@ -44,6 +43,7 @@ module.exports = {
       
           // Vérifier si l'état n'est pas déjà validé (etat = 1)
           const existingClient = await Client.getById(id);
+          console.log("existingClient: ", existingClient);
           if (existingClient.etat === 1) {
             return res.status(400).send({
               message: "L'inscription a déjà été validée.",
@@ -82,7 +82,7 @@ module.exports = {
             token: token
           });
         } catch (error) {
-          console.log(error.message);
+          console.log(error);
           res.status(500).send({
             message: error.message
           });
