@@ -18,42 +18,58 @@ class SendMail {
     // URL de l'API avec l'ID du client en tant que paramètre
     const apiURL = `http://localhost:4200/validation/${this.customer._id}`;
 
-    // Corps du message avec le lien vers l'API
+    // Corps HTML du mail
     const mailBody = `
-      Bonjour ${this.customer.nom},
-      Cliquez sur le lien suivant pour confirmer votre inscription : ${apiURL}
+        <html>
+        <head>
+        </head>
+        <body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; padding: 20px;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                <h1 style="color: #333333;">Bonjour ${this.customer.nom},</h1>
+                <p style="color: #666666;">Cliquez sur le lien suivant pour confirmer votre inscription :</p>
+                <p><a href="${apiURL}" style="color: #007bff; text-decoration: none;">${apiURL}</a></p>
+            </div>
+        </body>
+        </html>
     `;
 
     // Options du message
     const mailOptions = {
-      from: 'dmbeautyweb@gmail.com',
-      to: this.customer.email,
-      subject: 'confirmation inscription dmbeautyweb',
-      text: mailBody,
+        from: 'dmbeautyweb@gmail.com',
+        to: this.customer.email,
+        subject: 'Confirmation inscription dmbeautyweb',
+        html: mailBody,
     };
 
     // Envoi de l'e-mail
     try {
-      const info = await this.transporter.sendMail(mailOptions);
-      console.log('Message envoyé: %s', info.messageId);
+        const info = await this.transporter.sendMail(mailOptions);
+        console.log('Message envoyé: %s', info.messageId);
     } catch (error) {
-      console.error('Erreur lors de l\'envoi du message:', error.message);
+        console.error('Erreur lors de l\'envoi du message:', error.message);
     }
-  }
+}
 
   async sendPassword(employe){
-    const mailBody = `
-      Bonjour ${employe.prenom},
-      voici votre mot de passe temporaire : ${employe.mdp},
-      vous pourrez plus tard modifier ce mot de passe
-    `;
+    const mailBody =  `
+    <html>
+    <head>
+    </head>
+    <body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; padding: 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+            <h1 style="color: #333333;">Bonjour ${employe.prenom},</h1>
+            <p style="color: #666666;">voici votre mot de passe temporaire :${employe.mdp}</p>
+        </div>
+    </body>
+    </html>
+`;
 
     // Options du message
     const mailOptions = {
       from: 'dmbeautyweb@gmail.com',
       to: employe.login,
       subject: 'informations de mot de passe temporaire dmbeautyweb',
-      text: mailBody,
+      html: mailBody,
     };
 
     // Envoi de l'e-mail
