@@ -27,9 +27,10 @@ module.exports = {
             mail= new SendMail(cli);
             mail.send();
             res.status(200).send({
-                message: "Client inscrit avec succes",
+                message: "Client inscrit avec succes"
             });
         } catch (error) {
+          console.log(error);
             res.status(500).send({
                 message: error.message
             })
