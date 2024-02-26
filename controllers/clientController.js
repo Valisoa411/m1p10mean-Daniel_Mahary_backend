@@ -31,9 +31,7 @@ module.exports = {
             });
         } catch (error) {
           console.log(error);
-            res.status(500).send({
-                message: error.message
-            })
+            res.status(500).json({ message: 'erreur lors de l\' ajout ' });
         }
     },
     async validation_inscription(req, res) {
@@ -84,9 +82,7 @@ module.exports = {
           });
         } catch (error) {
           console.log(error);
-          res.status(500).send({
-            message: error.message
-          });
+          res.status(500).json({ message:"Erreur" });
         }
       },
       async liste_client(req, res) {
@@ -95,7 +91,7 @@ module.exports = {
           res.json(clients);
         } catch (error) {
           console.error('Erreur lors de la récupération de la liste des clients :', error);
-          res.status(500).json({ error: 'Erreur lors de la récupération de la liste des clients.' });
+          res.status(500).json({ message: 'Erreur lors de la récupération de la liste des clients.' });
         }
       },
       async signInClient(req, res) {
@@ -106,19 +102,19 @@ module.exports = {
           const existingClient = await Client.getByEmail(email);
   
           if (!existingClient) {
-              return res.status(400).json({ error: 'L\'email n\'existe pas dans la base de données. Veuillez vous inscrire.' });
+              return res.status(400).json({ message: 'L\'email n\'existe pas dans la base de données. Veuillez vous inscrire.' });
           }
   
           // Vérification de l'état du client
           if (existingClient.etat !== 1) {
-              return res.status(400).json({ error: 'Votre compte n\'a pas encore été validé. Veuillez vérifier votre email.' });
+              return res.status(400).json({ message: 'Votre compte n\'a pas encore été validé. Veuillez vérifier votre email.' });
           }
   
           // Vérification du mot de passe
           console.log(existingClient.mdp);
           const isPasswordCorrect = await bcrypt.compare(mdp, existingClient.mdp);
           if (!isPasswordCorrect) {
-              return res.status(401).json({ error: 'Mot de passe incorrect. Veuillez réessayer.' });
+              return res.status(401).json({ message: 'Mot de passe incorrect. Veuillez réessayer.' });
           }
 
           
@@ -132,7 +128,7 @@ module.exports = {
           res.status(200).json({ message: 'Connexion réussie.', token });
       } catch (error) {
           console.error('Erreur lors de la connexion :', error);
-          res.status(500).json({ error: 'Erreur interne du serveur.' });
+          res.status(500).json({ message: 'Erreur interne du serveur.' });
       }
   
     },

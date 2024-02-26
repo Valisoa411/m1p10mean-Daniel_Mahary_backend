@@ -16,7 +16,7 @@ class SendMail {
 
   async send() {
     // URL de l'API avec l'ID du client en tant que paramètre
-    const apiURL = `http://localhost:4200/validation/${this.customer._id}`;
+    const apiURL = `http://localhost:4200/client/validation/${this.customer._id}`;
 
     // Corps HTML du mail
     const mailBody = `
@@ -27,7 +27,7 @@ class SendMail {
             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
                 <h1 style="color: #333333;">Bonjour ${this.customer.nom},</h1>
                 <p style="color: #666666;">Cliquez sur le lien suivant pour confirmer votre inscription :</p>
-                <p><a href="${apiURL}" style="color: #007bff; text-decoration: none;">${apiURL}</a></p>
+                <p><a href="${apiURL}" style="color: #007bff; text-decoration: none;">valider</a></p>
             </div>
         </body>
         </html>

@@ -7,7 +7,7 @@ const verifyToken = (role) => (req, res, next) => {
   const token = req.header('Authorization');
 
   if (!token) {
-    return res.status(401).json({ error: 'Accès non autorisé. Token manquant.' });
+    return res.status(401).json({ message: 'Accès non autorisé. Token manquant.' });
   }
 
   try {
@@ -15,17 +15,17 @@ const verifyToken = (role) => (req, res, next) => {
     const decoded = jwt.verify(token, "beauty");
     const userRole = decoded.role;
     if(userRole !== role) {
-      return res.status(401).json({ error: 'Ressources non autorisés' });
+      return res.status(401).json({ message: 'Ressources non autorisés' });
     }
     req.user = decoded; // Stocke le payload dans req.user
     next();
   } catch (error) {
     console.log(error.message);
     if (error instanceof jwt.TokenExpiredError) {
-      return res.status(401).json({ error: 'Token expired' });
+      return res.status(401).json({ message: 'Token expired' });
     } else {
       console.error('Erreur de vérification du token :', error);
-      return res.status(401).json({ error: 'Accès non autorisé. Token invalide.' });
+      return res.status(401).json({ message: 'Accès non autorisé. Token invalide.' });
     }
   }
 };

@@ -65,12 +65,12 @@ module.exports = {
             const existingEmploye = await Employe.getByEmail(login);
     
             if (!existingEmploye) {
-                return res.status(400).json({ error: 'ce login n\'existe pas dans la base de données. Veuillez vous inscrire.' });
+                return res.status(400).json({ message: 'ce login n\'existe pas dans la base de données. Veuillez vous inscrire.' });
             }
     
             const isPasswordCorrect = await bcrypt.compare(mdp, existingEmploye.mdp);
             if (!isPasswordCorrect) {
-                return res.status(401).json({ error: 'Mot de passe incorrect. Veuillez réessayer.' });
+                return res.status(401).json({ message: 'Mot de passe incorrect. Veuillez réessayer.' });
             }
             // Vérification du mot de passe
   
@@ -85,7 +85,7 @@ module.exports = {
             res.status(200).json({ message: 'Connexion réussie.', token });
         } catch (error) {
             console.error('Erreur lors de la connexion :', error);
-            res.status(500).json({ error: 'Erreur interne du serveur.' });
+            res.status(500).json({ message: 'Erreur interne du serveur.' });
         }
     
     },
@@ -100,7 +100,7 @@ module.exports = {
           const employe = await Employe.getEmployeeById(employeId);
       
           if (!employe) {
-            return res.status(404).json({ error: 'Employé non trouvé' });
+            return res.status(404).json({ message: 'Employé non trouvé' });
           }
       
           // Mettez à jour les champs de l'employé
@@ -133,7 +133,7 @@ module.exports = {
           res.status(200).json(employe);
         } catch (error) {
           console.error('Erreur lors de la mise à jour de l\'employé :', error);
-          res.status(500).json({ error: 'Erreur lors de la mise à jour de l\'employé.' });
+          res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'employé.' });
         }
     }, 
     async updateEmploye(req,res){
@@ -145,7 +145,7 @@ module.exports = {
             const employe = await Employe.getEmployeeById(employeId);
         
             if (!employe) {
-              return res.status(404).json({ error: 'Employé non trouvé' });
+              return res.status(404).json({ message: 'Employé non trouvé' });
             }
         
             // Mettez à jour les champs de l'employé
@@ -166,7 +166,7 @@ module.exports = {
             res.status(200).json(employe);
           } catch (error) {
             console.error('Erreur lors de la mise à jour de l\'employé :', error);
-            res.status(500).json({ error: 'Erreur lors de la mise à jour de l\'employé.' });
+            res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'employé.' });
           }
     }
 

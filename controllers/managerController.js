@@ -53,7 +53,7 @@ module.exports = {
             res.status(201).json(client);
           } catch (error) {
             console.error('Erreur lors de l\'ajout de l\'employé :', error);
-            res.status(500).json({ error: 'Erreur lors de l\'ajout de l\'employé' });
+            res.status(500).json({ message: 'Erreur lors de l\'ajout de l\'employé' });
           }
     },
     async liste_employe(req, res) {
@@ -62,7 +62,7 @@ module.exports = {
           res.json(clients);
         } catch (error) {
           console.error('Erreur lors de la récupération de la liste des clients :', error);
-          res.status(500).json({ error: 'Erreur lors de la récupération de la liste des clients.' });
+          res.status(500).json({ message: 'Erreur lors de la récupération de la liste des clients.' });
         }
     },
     async delete_employe(req, res) {
@@ -73,7 +73,7 @@ module.exports = {
             const employe = await Employe.getEmployeeById(employeId);
       
             if (!employe) {
-              return res.status(404).json({ error: 'Employé non trouvé' });
+              return res.status(404).json({ message: 'Employé non trouvé' });
             }
       
             // Supprimer l'employé de la base de données
@@ -87,7 +87,7 @@ module.exports = {
             res.status(200).json({ message: 'Employé supprimé avec succès' });
           } catch (error) {
             console.error('Erreur lors de la suppression de l\'employé :', error);
-            res.status(500).json({ error: 'Erreur lors de la suppression de l\'employé' });
+            res.status(500).json({ message: 'Erreur lors de la suppression de l\'employé' });
           }
     },
     async initManager(req, res) {
@@ -140,7 +140,7 @@ module.exports = {
           res.status(200).json(result);
         } catch (error) {
           console.error('Erreur lors de la recherche d\'employés :', error);
-          res.status(500).json({ error: 'Erreur lors de la recherche d\'employés.' });
+          res.status(500).json({ message: 'Erreur lors de la recherche d\'employés.' });
         }
     }
 }
