@@ -32,6 +32,7 @@ const routerEmploye = () => {
     routerEmployer.put('/updateEmployeWithPic' ,upload.single('photo'), employeController.updateEmployeWithPic);
     routerEmployer.put('/updateEmploye' , employeController.updateEmploye);
     routerEmployer.get('/listeRdv' , employeController.listeRdv);
+    routerEmployer.get('/searchRdv' , employeController.searchRdv);
     routerEmployer.post('/horaire', horaireController.createHoraire);
     routerEmployer.get('/horaire', employeController.getEmployeHoraires);
     return routerEmployer;

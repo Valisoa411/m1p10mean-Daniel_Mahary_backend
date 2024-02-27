@@ -170,10 +170,22 @@ module.exports = {
     },
     async listeRdv(req,res){
         try {
+            console.log(req.user.idemploye);
             const rendezVous = await Employe.getRendezVous(req.user.idemploye);
-            res.status(200).send({
-              rendezVous,
+            res.json(rendezVous);
+        } catch (error) {
+            res.status(500).send({
+              message: error.message,
             });
+        }
+    },
+    async searchRdv(req,res){
+        try {
+            const {date1,date2} =req.query;
+            console.log(req.user.idemploye);
+            const rendezVous = await Employe.getRendezVousBetweenDates(req.user.idemploye,date1,date2);
+            console.log(rendezVous);
+            res.json(rendezVous);
         } catch (error) {
             res.status(500).send({
               message: error.message,

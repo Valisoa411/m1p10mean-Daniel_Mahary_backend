@@ -91,7 +91,17 @@ class Employe {
   }
   static async getRendezVous(id) {
     // Utilisez l'ID de l'employé pour récupérer les rendez-vous associés
-    return await RendezVousModel.find({ employes: { $in: [id] } });
+    return await RendezVousModel.find({ "employes._id": { $in: [id] } });
+  }
+  static async getRendezVousBetweenDates(id, startDateString, endDateString) {
+    const startDate = new Date(startDateString);
+    const endDate = new Date(endDateString);
+  
+    // Utilisez l'ID de l'employé et les dates pour récupérer les rendez-vous associés
+    return await RendezVousModel.find({
+      "employes._id": { $in: [id] },
+      date: { $gte: startDate, $lte: endDate }
+    });
   }
 }
 
