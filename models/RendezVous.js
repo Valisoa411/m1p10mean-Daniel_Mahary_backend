@@ -24,6 +24,10 @@ class RendezVous {
         return await newRendezVousMongoose.save();
     }
 
+    static async getAll() {
+        return await RendezVousModel.find();
+    }
+
 }
 
 module.exports = RendezVous;

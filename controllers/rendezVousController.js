@@ -7,7 +7,7 @@ module.exports = {
             const { service, date, employes, prixFinal } = req.body;
             const client = await ClientModel.findById(req.user.idclient);
             console.log("client: ", req.user);
-            let rendezVous = new RendezVous(null, client, service, date, employes, prixFinal, 1);
+            let rendezVous = new RendezVous(null, client, service, date, employes, prixFinal, "En attente");
             rendezVous = rendezVous.insert();
             res.status(200).send({
                 message: "Rendez-vous enregistrer avec succes",
@@ -19,5 +19,5 @@ module.exports = {
                 message: error.message
             })
         }
-    }
+    },
 }

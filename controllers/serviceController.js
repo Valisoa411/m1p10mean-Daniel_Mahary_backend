@@ -23,14 +23,18 @@ module.exports = {
     async getAvailableEmploye(req, res) {
         try {
             const { idService, selectedDate } = req.query;
+            console.log(idService);
+            console.log(selectedDate);
             const result = await new Service(idService).getById();
-            const service = new Service();
+            const service=new Service();
             service.duree = result.duree;
             const employees = await service.availableEmploye(selectedDate);
+            console.log(employees);
             res.status(200).send({
                 employees,
             })
         } catch (error) {
+            console.log(error);
             res.status(500).send({
                 message: error.message
             })

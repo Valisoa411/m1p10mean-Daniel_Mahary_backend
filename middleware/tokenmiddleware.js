@@ -13,6 +13,7 @@ const verifyToken = (role) => (req, res, next) => {
   try {
     // console.log(token);
     const decoded = jwt.verify(token, "beauty");
+    console.log(decoded);
     const userRole = decoded.role;
     if(userRole !== role) {
       return res.status(401).json({ message: 'Ressources non autorisés' });

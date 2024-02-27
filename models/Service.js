@@ -100,13 +100,16 @@ class Service {
 
     //check and test compact version in random_function
     async availableEmploye(selectedDate) {
+        console.log(selectedDate);
         const rdvStart = new Date(selectedDate);
         const rdvEnd = addDuree(rdvStart, this.duree);
+        console.log(rdvEnd);
         const duree = this.duree;
+        console.log(rdvStart);
         const horairePipeline = [
             {
                 $match: {
-                    jour: rdvStart.getDay() + 1,
+                    jour: rdvStart.getDay(),
                     $or: [
                         {
                             $and: [
@@ -131,6 +134,7 @@ class Service {
             }
         ];
         const horaireResult = await HoraireModel.aggregate(horairePipeline).exec();
+        console.log(horaireResult);
         const idEmployeList = horaireResult.map(horaire => horaire.idEmploye);
         // console.log("idEmployeList: ", idEmployeList);
         const rendezVousPipeline = [

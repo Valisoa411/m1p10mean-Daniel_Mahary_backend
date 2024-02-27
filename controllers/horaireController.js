@@ -4,7 +4,7 @@ module.exports = {
     async createHoraire(req, res) {
         try {
             const {idEmploye, jour, debut, fin} = req.body;
-            const horaire = await new Horaire(idEmploye, jour, debut, fin).insert();
+            const horaire = await new Horaire(req.user.idemploye, jour, debut, fin).insert();
             res.status(200).send({
                 message: "Horaire enregistrer avec succes",
                 horaire,

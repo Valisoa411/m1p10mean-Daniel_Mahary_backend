@@ -15,9 +15,8 @@ cloudinary.config({
 module.exports = {
     async getEmployeHoraires(req, res) {
         try {
-            const id = req.params.idEmploye;
-            const employe = new Employe(id);
-            const horaires = await employe.getHoraires();
+            const horaires = await Employe.getHoraires(req.user.idemploye);
+            console.log(horaires);
             res.status(200).send({
                 horaires,
             })
@@ -168,6 +167,18 @@ module.exports = {
             console.error('Erreur lors de la mise à jour de l\'employé :', error);
             res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'employé.' });
           }
+    },
+    async listeRdv(req,res){
+        try {
+            const rendezVous = await Employe.getRendezVous(req.user.idemploye);
+            res.status(200).send({
+              rendezVous,
+            });
+        } catch (error) {
+            res.status(500).send({
+              message: error.message,
+            });
+        }
     }
 
 

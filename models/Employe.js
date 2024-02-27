@@ -1,6 +1,7 @@
 const { EmployeeModel } = require('../schema/employe.schema');
 const { HoraireModel } = require('../schema/horaire.schema');
 const bcrypt= require("bcrypt");
+const { RendezVousModel } = require('../schema/rendezVous.schema');
 
 class Employe {
   constructor(nom = null, prenom = null, cin = null, genre = null, login = null, mdp = null, photo = null) {
@@ -13,8 +14,8 @@ class Employe {
     this.photo = photo;
   }
 
-  async getHoraires() {
-    const horaires = await HoraireModel.find({ idEmploye: this._id })
+  static async getHoraires(id) {
+    const horaires = await HoraireModel.find({ idEmploye: id })
       .sort({ jour: 1, debut: 1 }) // Sort by jour in ascending order, then debut in ascending order
       .exec();
     return horaires;
@@ -87,6 +88,10 @@ class Employe {
 
   static async deleteEmployee(id) {
     return await EmployeeModel.findByIdAndDelete(id);
+  }
+  static async getRendezVous(id) {
+    // Utilisez l'ID de l'employé pour récupérer les rendez-vous associés
+    return await RendezVousModel.find({ employes: { $in: [id] } });
   }
 }
 

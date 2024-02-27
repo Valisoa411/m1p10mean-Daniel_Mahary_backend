@@ -17,9 +17,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-router.get('/horaire/:idEmploye', employeController.getEmployeHoraires);
 
-router.post('/horaire', horaireController.createHoraire);
 
 router.get('/horaire/detail/:id', horaireController.getHoraireById);
 router.put('/horaire', horaireController.updateHoraire);
@@ -33,6 +31,9 @@ const routerEmploye = () => {
     routerEmployer.get('/info_employe', employeController.info_employe);
     routerEmployer.put('/updateEmployeWithPic' ,upload.single('photo'), employeController.updateEmployeWithPic);
     routerEmployer.put('/updateEmploye' , employeController.updateEmploye);
+    routerEmployer.get('/listeRdv' , employeController.listeRdv);
+    routerEmployer.post('/horaire', horaireController.createHoraire);
+    routerEmployer.get('/horaire', employeController.getEmployeHoraires);
     return routerEmployer;
 }
 
