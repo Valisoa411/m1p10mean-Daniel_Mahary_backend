@@ -95,7 +95,9 @@ class Employe {
   }
   static async getRendezVousBetweenDates(id, startDateString, endDateString) {
     const startDate = new Date(startDateString);
+    startDate.setHours(0, 0, 0, 0);
     const endDate = new Date(endDateString);
+    endDate.setHours(23, 59, 59, 999);
   
     // Utilisez l'ID de l'employé et les dates pour récupérer les rendez-vous associés
     return await RendezVousModel.find({
@@ -103,6 +105,57 @@ class Employe {
       date: { $gte: startDate, $lte: endDate }
     });
   }
+  static async getRendezVousForDate(id, dateString) {
+    const dateToSearch = new Date(dateString);
+  
+    // Utilisez l'ID de l'employé et la date pour récupérer les rendez-vous associés
+    const startDate = new Date(dateToSearch);
+    startDate.setHours(0, 0, 0, 0); // Date de début à 00:00:00
+
+    const endDate = new Date(dateToSearch);
+    endDate.setHours(23, 59, 59, 999); // Date de fin à 23:59:59.999
+
+    // Utilisez l'ID de l'employé et la plage de temps pour récupérer les rendez-vous associés
+    return await RendezVousModel.find({
+        "employes._id": { $in: [id] },
+        date: { $gte: startDate, $lte: endDate }
+    });
+  }
+  static async  calculateDailyCommission(employeeId, date) {
+    try {
+        const dateToSearch = new Date(date);
+
+        // Utilisez l'ID de l'employé et la date pour récupérer les rendez-vous associés
+        const startDate = new Date(dateToSearch);
+        startDate.setHours(0, 0, 0, 0); // Date de début à 00:00:00
+
+        const endDate = new Date(dateToSearch);
+        endDate.setHours(23, 59, 59, 999); // Date de fin à 23:59:59.999
+
+        const rendezVousList = await RendezVousModel.find({
+            "employes._id": employeeId,
+            date: { $gte: startDate, $lte: endDate },
+            etat: "Effectué"
+        });
+
+        let totalCommission = 0;
+
+        rendezVousList.forEach((rendezVous) => {
+            const serviceCommissionPercentage = rendezVous.service.commission;
+            const prixFinal = rendezVous.prixFinal;
+
+            // Calculez la commission pour ce rendez-vous
+            const commission = (serviceCommissionPercentage / 100) * prixFinal;
+
+            // Ajoutez la commission au total
+            totalCommission += commission;
+        });
+
+        return totalCommission;
+    } catch (error) {
+        throw new Error("Erreur lors du calcul de la commission quotidienne : " + error.message);
+    }
+}
 }
 
 module.exports = Employe;

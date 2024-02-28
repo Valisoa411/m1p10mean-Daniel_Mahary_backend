@@ -4,7 +4,6 @@ const { EmployeeSchema } = require('./employe.schema');
 const { ServiceSchema } = require('./service.schema');
 
 const RendezVousSchema = new mongoose.Schema({
-    _id: String,
     client: ClientSchema,
     service: ServiceSchema,
     date: Date,

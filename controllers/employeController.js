@@ -184,8 +184,32 @@ module.exports = {
             const {date1,date2} =req.query;
             console.log(req.user.idemploye);
             const rendezVous = await Employe.getRendezVousBetweenDates(req.user.idemploye,date1,date2);
-            console.log(rendezVous);
+
             res.json(rendezVous);
+        } catch (error) {
+            res.status(500).send({
+              message: error.message,
+            });
+        }
+    },
+    async RdvNow(req,res){
+        try {
+            const {date} =req.query;
+            console.log(req.user.idemploye);
+            const rendezVous = await Employe.getRendezVousForDate(req.user.idemploye,date);
+            res.json(rendezVous);
+        } catch (error) {
+            res.status(500).send({
+              message: error.message,
+            });
+        }
+    },
+    async commisssionDay(req,res){
+        try {
+            const {date} =req.query;
+            console.log(req.user.idemploye);
+            const commission = await Employe.calculateDailyCommission(req.user.idemploye,date);
+            res.json(commission);
         } catch (error) {
             res.status(500).send({
               message: error.message,

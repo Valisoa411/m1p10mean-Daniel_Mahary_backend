@@ -7,6 +7,7 @@ const horaireController = require('../controllers/horaireController');
 const verifyToken=require('../middleware/tokenmiddleware');
 
 const multer = require('multer');
+const rendezVousController = require('../controllers/rendezVousController');
 
 // Configuration Multer pour le téléchargement de fichiers
 const storage = multer.diskStorage({
@@ -33,8 +34,12 @@ const routerEmploye = () => {
     routerEmployer.put('/updateEmploye' , employeController.updateEmploye);
     routerEmployer.get('/listeRdv' , employeController.listeRdv);
     routerEmployer.get('/searchRdv' , employeController.searchRdv);
+    routerEmployer.get('/rdvNow' , employeController.RdvNow);
+    routerEmployer.get('/commissionDay' , employeController.commisssionDay);
     routerEmployer.post('/horaire', horaireController.createHoraire);
     routerEmployer.get('/horaire', employeController.getEmployeHoraires);
+    routerEmployer.get('/rdv/:id', rendezVousController.getRdvById);
+    routerEmployer.put('/updateRdv', rendezVousController.updateRdv);
     return routerEmployer;
 }
 
