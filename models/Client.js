@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const { ClientModel } = require('../schema/client.schema');
+const { PreferenceModel } = require('../schema/preference.schema');
+const { ObjectId } = require('mongoose').Types;
 
 class Client {
     constructor(
@@ -35,6 +37,14 @@ class Client {
             throw new Error('Date de naissance doit être antérieure à la date actuelle');
         }
 
+    }
+
+    async getPreferences(type) {
+        const query = {
+            idClient: new ObjectId(this._id),
+            type: type,
+        }
+        return await PreferenceModel.find(query).exec();
     }
 
     static async getAll() {

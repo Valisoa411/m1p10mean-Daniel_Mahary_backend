@@ -1,3 +1,5 @@
+const Client = require('../models/Client');
+const Preference = require('../models/Preference');
 const Service = require('../models/Service')
 
 module.exports = {
@@ -23,13 +25,10 @@ module.exports = {
     async getAvailableEmploye(req, res) {
         try {
             const { idService, selectedDate } = req.query;
-            console.log(idService);
-            console.log(selectedDate);
             const result = await new Service(idService).getById();
             const service=new Service();
             service.duree = result.duree;
             const employees = await service.availableEmploye(selectedDate);
-            console.log(employees);
             res.status(200).send({
                 employees,
             })
@@ -65,6 +64,28 @@ module.exports = {
                 services,
             })
         } catch (error) {
+            // console.log(error);
+            res.status(500).send({
+                message: error.message
+            })
+        }
+    },
+
+    async allServicesWithPreferences(req, res) {
+        try {
+            let services = await new Service().getAll();
+            const { idclient, role } = req.user;
+            if(role === 'client') {
+                const client = new Client();
+                client._id = idclient;
+                const preferences = await client.getPreferences('service');
+                services = Preference.putPreferenceInList(services, preferences);
+            }
+            res.status(200).send({
+                services,
+            })
+        } catch (error) {
+            // console.log(error);
             res.status(500).send({
                 message: error.message
             })

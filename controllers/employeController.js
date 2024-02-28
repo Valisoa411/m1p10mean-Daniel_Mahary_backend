@@ -2,6 +2,8 @@ const Employe = require('../models/Employe')
 const jwt = require('jsonwebtoken');
 const cloudinary = require('cloudinary').v2;
 const bcrypt=require('bcrypt');
+const Client = require('../models/Client');
+const Preference = require('../models/Preference');
 
 
 cloudinary.config({
@@ -13,6 +15,27 @@ cloudinary.config({
 // Fonction pour extraire le public_id à partir de l'URL Cloudinary
 
 module.exports = {
+    async allEmployesWithPreferences(req, res) {
+        try {
+            let employes = await Employe.getAllEmployees();
+            const { idclient, role } = req.user;
+            if(role === 'client') {
+                const client = new Client();
+                client._id = idclient;
+                const preferences = await client.getPreferences('employe');
+                employes = Preference.putPreferenceInList(employes, preferences);
+            }
+            res.status(200).send({
+                employes,
+            })
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({
+                message: error.message
+            })
+        }
+    },
+
     async getEmployeHoraires(req, res) {
         try {
             const horaires = await Employe.getHoraires(req.user.idemploye);
@@ -27,7 +50,6 @@ module.exports = {
         }
 
     },
-
 
     async createEmploye(req, res) {
         try {
