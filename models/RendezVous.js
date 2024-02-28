@@ -47,6 +47,48 @@ class RendezVous {
     static async update(id, updatedData) {
         return await RendezVousModel.findByIdAndUpdate(id, updatedData, { new: true });
     }
+
+    static async byDate(year,month){
+        const result = await RendezVousModel.aggregate([
+            {
+              $match: {
+                date: {
+                  $gte: new Date(`${year}-${month}-01`),
+                  $lt: new Date(`${year}-${parseInt(month) + 1}-01`),
+                },
+              },
+            },
+            {
+              $group: {
+                _id: { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { '_id': 1 } }, // Tri par jour croissant
+          ]);
+        return result;
+    }
+    static async byMonth(year){
+        const result = await RendezVousModel.aggregate([
+            {
+              $match: {
+                date: {
+                  $gte: new Date(`${year}-01-01`),
+                  $lt: new Date(`${parseInt(year) + 1}-01-01`),
+                },
+              },
+            },
+            {
+              $group: {
+                _id: { $dateToString: { format: '%Y-%m', date: '$date' } },
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { '_id': 1 } }, // Tri par mois croissant
+          ]);
+        return result;
+    }
+
     
 
 }

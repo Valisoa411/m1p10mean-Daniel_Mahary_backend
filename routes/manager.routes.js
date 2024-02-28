@@ -10,6 +10,7 @@ const verifyToken = require('../middleware/tokenmiddleware');
 
 const multer = require('multer');
 const offreSpecialController = require('../controllers/offreSpecialController');
+const rendezVousController = require('../controllers/rendezVousController');
 
 // Configuration Multer pour le téléchargement de fichiers
 const storage = multer.diskStorage({
@@ -52,6 +53,8 @@ const routerManager = () => {
   routerMan.get('/searchRdv' , employeController.searchRdvViewForManager);
   routerMan.get('/moyenneHeureTravail', employeController.MoyenneHeureTravail);
   routerMan.get('/info_employe', managerController.info_employe);
+  routerMan.get('/byDate', rendezVousController.byDate);
+  routerMan.get('/byMonth', rendezVousController.byMonth);
 
   return routerMan;
 }

@@ -52,5 +52,30 @@ module.exports = {
             })
         }
 
+    },
+    async byDate(req,res){
+        try {
+            const {annee,mois}=req.query;
+            const result= await RendezVous.byDate(annee,mois);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).send({
+                message: error.message
+            })
+        }
+        
+    },
+    async byMonth(req,res){
+        try {
+            const {annee}=req.query;
+            console.log(annee);
+            const result= await RendezVous.byMonth(annee);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).send({
+                message: error.message
+            })
+        }
+        
     }
 }
