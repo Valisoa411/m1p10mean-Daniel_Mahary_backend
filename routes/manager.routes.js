@@ -44,7 +44,7 @@ const routerManager = () => {
   routerMan.delete('/service/:id', serviceController.deleteService);
 
   routerMan.post('/offreSpecial', offreSpecialController.createOffreSpecial);
-  routerMan.post('/offreSpecial', offreSpecialController.createOffreSpecial);
+  routerMan.get('/offreSpecial', offreSpecialController.allOffreSpecials);
   routerMan.get('/offreSpecial/:id', offreSpecialController.getOffreSpecialById);
   routerMan.put('/offreSpecial', offreSpecialController.updateOffreSpecial);
   routerMan.delete('/offreSpecial/:id', offreSpecialController.deleteOffreSpecial);
