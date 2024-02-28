@@ -142,5 +142,18 @@ module.exports = {
           console.error('Erreur lors de la recherche d\'employés :', error);
           res.status(500).json({ message: 'Erreur lors de la recherche d\'employés.' });
         }
+    },
+    async info_employe(req, res) {
+        try {
+            const {idemploye}=req.query;
+            const employe = await Employe.getById(idemploye);
+            console.log(employe);
+            res.json(employe);
+        } catch (error) {
+            console.log(error.message);
+            res.status(500).send({
+                message: error.message
+            })
+        }
     }
 }

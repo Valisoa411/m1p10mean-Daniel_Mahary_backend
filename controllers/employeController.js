@@ -179,11 +179,36 @@ module.exports = {
             });
         }
     },
+    async listeRdvForViewManager(req,res){
+        try {
+            const {idemploye}=req.query
+            console.log(idemploye);
+            const rendezVous = await Employe.getRendezVous(idemploye);
+            res.json(rendezVous);
+        } catch (error) {
+            res.status(500).send({
+              message: error.message,
+            });
+        }
+    },
     async searchRdv(req,res){
         try {
             const {date1,date2} =req.query;
             console.log(req.user.idemploye);
             const rendezVous = await Employe.getRendezVousBetweenDates(req.user.idemploye,date1,date2);
+
+            res.json(rendezVous);
+        } catch (error) {
+            res.status(500).send({
+              message: error.message,
+            });
+        }
+    },
+    async searchRdvViewForManager(req,res){
+        try {
+            const {date1,date2,idemploye} =req.query;
+            console.log(idemploye);
+            const rendezVous = await Employe.getRendezVousBetweenDates(idemploye,date1,date2);
 
             res.json(rendezVous);
         } catch (error) {
@@ -210,6 +235,18 @@ module.exports = {
             console.log(req.user.idemploye);
             const commission = await Employe.calculateDailyCommission(req.user.idemploye,date);
             res.json(commission);
+        } catch (error) {
+            res.status(500).send({
+              message: error.message,
+            });
+        }
+    },
+    async MoyenneHeureTravail(req,res){
+        try {
+            const {idemploye} =req.query;
+            console.log(idemploye);
+            const moyenne = await Employe.getMoyenneHeureDetravail(idemploye);
+            res.json(moyenne);
         } catch (error) {
             res.status(500).send({
               message: error.message,

@@ -155,7 +155,36 @@ class Employe {
     } catch (error) {
         throw new Error("Erreur lors du calcul de la commission quotidienne : " + error.message);
     }
-}
+  }
+  static async getMoyenneHeureDetravail(idemploye){
+      const pipeline = [
+        {
+          $match: {
+            "employes._id": { $in: [idemploye] },
+            "etat": "Effectué"
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            totalDuration: { $sum: "$service.duree" },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            moyenne: { $divide: ["$totalDuration", { $multiply: ["$count", 60] }] }
+          }
+        }
+      ];
+
+      const result = await RendezVousModel.aggregate(pipeline);
+
+      const moyenne = result.length > 0 ? result[0].moyenne : 0;
+      return moyenne;
+  }
+  
 }
 
 module.exports = Employe;

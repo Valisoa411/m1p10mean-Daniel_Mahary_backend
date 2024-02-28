@@ -132,5 +132,16 @@ module.exports = {
       }
   
     },
+    async listeRdv(req,res){
+      try {
+          console.log(req.user.idclient);
+          const rendezVous = await Client.getRendezVous(req.user.idclient);
+          res.json(rendezVous);
+      } catch (error) {
+          res.status(500).send({
+            message: error.message,
+          });
+    }
+  }
 
 }

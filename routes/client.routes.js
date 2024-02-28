@@ -21,7 +21,10 @@ const routerCli = () => {
 
     routerCli.get('/availability', serviceController.getAvailableHoraire);
     routerCli.get('/employeAvailable', serviceController.getAvailableEmploye);
-    routerCli.post('/rendezVous', rendezVousController.createRendezVous)
+    routerCli.post('/rendezVous', rendezVousController.createRendezVous);
+    routerCli.put('/updateRdv', rendezVousController.updateRdv);
+    routerCli.get('/rdv/:id', rendezVousController.getRdvById);
+    routerCli.get('/listeRdv' , clientController.listeRdv);
 
     return routerCli;
 }

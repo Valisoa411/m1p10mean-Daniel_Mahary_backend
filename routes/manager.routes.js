@@ -48,6 +48,10 @@ const routerManager = () => {
   routerMan.get('/offreSpecial/:id', offreSpecialController.getOffreSpecialById);
   routerMan.put('/offreSpecial', offreSpecialController.updateOffreSpecial);
   routerMan.delete('/offreSpecial/:id', offreSpecialController.deleteOffreSpecial);
+  routerMan.get('/listeRdv' , employeController.listeRdvForViewManager);
+  routerMan.get('/searchRdv' , employeController.searchRdvViewForManager);
+  routerMan.get('/moyenneHeureTravail', employeController.MoyenneHeureTravail);
+  routerMan.get('/info_employe', managerController.info_employe);
 
   return routerMan;
 }

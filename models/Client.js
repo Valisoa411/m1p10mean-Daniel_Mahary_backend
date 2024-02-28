@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { ClientModel } = require('../schema/client.schema');
+const { RendezVousModel } = require('../schema/rendezVous.schema');
 
 class Client {
     constructor(
@@ -109,6 +110,11 @@ class Client {
             // Gérer l'erreur selon vos besoins
             return false;
         }
+    }
+
+    static async getRendezVous(id) {
+        // Utilisez l'ID de l'employé pour récupérer les rendez-vous associés
+        return await RendezVousModel.find({ "client._id": { $in: [id] } });
     }
 
 
