@@ -45,8 +45,8 @@ module.exports = {
 
     async createService(req, res) {
         try {
-            const {nom, prix, duree, commission, description, photo, nbEmploye} = req.body;
-            const service = await new Service(nom, prix, duree, commission, description, photo, nbEmploye).insert();
+            const {nom, prix, duree, commission, description, photo} = req.body;
+            const service = await new Service(nom, prix, duree, commission, description, photo, 1).insert();
             res.status(200).send({
                 message: "Service enregistrer avec succes",
                 service,
