@@ -25,6 +25,7 @@ const upload = multer({ storage: storage });
 router.post('/login', managerController.loginManager);
 
 router.get('/service', serviceController.allServices);
+router.get('/service/:id', serviceController.getServiceById);
 
 const routerManager = () => {
   const routerMan = express.Router();
@@ -39,7 +40,6 @@ const routerManager = () => {
   routerMan.get('/search', managerController.searchEmploye);
 
   routerMan.post('/service', serviceController.createService);
-  routerMan.get('/service/:id', serviceController.getServiceById);
   routerMan.put('/service', serviceController.updateService);
   routerMan.delete('/service/:id', serviceController.deleteService);
 
