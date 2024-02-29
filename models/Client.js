@@ -112,9 +112,12 @@ class Client {
         }
     }
 
-    static async getRendezVous(id) {
+    static async getRendezVous(id,page=1,limit=5) {
+        const skip = (page - 1) * limit;
         // Utilisez l'ID de l'employé pour récupérer les rendez-vous associés
-        return await RendezVousModel.find({ "client._id": { $in: [id] } });
+        const listeRdv=await RendezVousModel.find({ "client._id": { $in: [id] } }).skip(skip).limit(5);
+        const totalItems=await RendezVousModel.countDocuments({ "client._id": { $in: [id] } });
+        return {listeRdv,totalItems};
     }
 
 

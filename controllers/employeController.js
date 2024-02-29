@@ -170,8 +170,9 @@ module.exports = {
     },
     async listeRdv(req,res){
         try {
+            const {page,limit}=req.query;
             console.log(req.user.idemploye);
-            const rendezVous = await Employe.getRendezVous(req.user.idemploye);
+            const rendezVous = await Employe.getRendezVous(req.user.idemploye,page,limit);
             res.json(rendezVous);
         } catch (error) {
             res.status(500).send({
@@ -181,9 +182,9 @@ module.exports = {
     },
     async listeRdvForViewManager(req,res){
         try {
-            const {idemploye}=req.query
+            const {idemploye,page,limit}=req.query
             console.log(idemploye);
-            const rendezVous = await Employe.getRendezVous(idemploye);
+            const rendezVous = await Employe.getRendezVous(idemploye,page,limit);
             res.json(rendezVous);
         } catch (error) {
             res.status(500).send({
@@ -193,9 +194,9 @@ module.exports = {
     },
     async searchRdv(req,res){
         try {
-            const {date1,date2} =req.query;
+            const {date1,date2,page,limit} =req.query;
             console.log(req.user.idemploye);
-            const rendezVous = await Employe.getRendezVousBetweenDates(req.user.idemploye,date1,date2);
+            const rendezVous = await Employe.getRendezVousBetweenDates(req.user.idemploye,date1,date2,page,limit);
 
             res.json(rendezVous);
         } catch (error) {
@@ -206,9 +207,9 @@ module.exports = {
     },
     async searchRdvViewForManager(req,res){
         try {
-            const {date1,date2,idemploye} =req.query;
+            const {date1,date2,idemploye,page,limit} =req.query;
             console.log(idemploye);
-            const rendezVous = await Employe.getRendezVousBetweenDates(idemploye,date1,date2);
+            const rendezVous = await Employe.getRendezVousBetweenDates(idemploye,date1,date2,page,limit);
 
             res.json(rendezVous);
         } catch (error) {
@@ -219,9 +220,9 @@ module.exports = {
     },
     async RdvNow(req,res){
         try {
-            const {date} =req.query;
+            const {date,page,limit} =req.query;
             console.log(req.user.idemploye);
-            const rendezVous = await Employe.getRendezVousForDate(req.user.idemploye,date);
+            const rendezVous = await Employe.getRendezVousForDate(req.user.idemploye,date,page,limit);
             res.json(rendezVous);
         } catch (error) {
             res.status(500).send({

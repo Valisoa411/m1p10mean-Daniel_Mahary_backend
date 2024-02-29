@@ -41,7 +41,8 @@ class Employe {
 
   }
 
-  static async searchElastic(term) {
+  static async searchElastic(term,page=1,limit=5) {
+    const skip = (page - 1) * limit;
     const searchQuery = {
       $or: [
         { nom: { $regex: new RegExp(term, 'i') } }, // Recherche insensible à la casse pour le nom
@@ -51,7 +52,9 @@ class Employe {
       ]
     };
 
-    return await EmployeeModel.find(searchQuery);
+    const listeEmploye = await EmployeeModel.find(searchQuery).skip(skip).limit(limit);
+    const totalItems= await EmployeeModel.countDocuments(searchQuery);
+    return {listeEmploye,totalItems};
   }
 
   static async getByEmail(emaile){
@@ -74,8 +77,12 @@ class Employe {
 
 
 
-  static async getAllEmployees() {
-    return await EmployeeModel.find();
+  static async getAllEmployees(page=1,limit=5) {
+    const skip = (page - 1) * limit;
+    const listeEmploye=await EmployeeModel.find().skip(skip)
+    .limit(limit);
+    const totalItems=await EmployeeModel.countDocuments();
+    return {listeEmploye,totalItems};
   }
 
   static async getEmployeeById(id) {
@@ -89,23 +96,33 @@ class Employe {
   static async deleteEmployee(id) {
     return await EmployeeModel.findByIdAndDelete(id);
   }
-  static async getRendezVous(id) {
+  static async getRendezVous(id,page=1,limit=5) {
+    const skip = (page - 1) * limit;
     // Utilisez l'ID de l'employé pour récupérer les rendez-vous associés
-    return await RendezVousModel.find({ "employes._id": { $in: [id] } });
+    const listeRdv=await RendezVousModel.find({ "employes._id": { $in: [id] } }).skip(skip).limit(limit);
+    const totalItems=await  RendezVousModel.countDocuments({ "employes._id": { $in: [id] } });
+    return {listeRdv,totalItems};
   }
-  static async getRendezVousBetweenDates(id, startDateString, endDateString) {
+  static async getRendezVousBetweenDates(id, startDateString, endDateString,page=1,limit=5) {
+    const skip = (page - 1) * limit;
     const startDate = new Date(startDateString);
     startDate.setHours(0, 0, 0, 0);
     const endDate = new Date(endDateString);
     endDate.setHours(23, 59, 59, 999);
   
     // Utilisez l'ID de l'employé et les dates pour récupérer les rendez-vous associés
-    return await RendezVousModel.find({
+    const listeRdv= await RendezVousModel.find({
+      "employes._id": { $in: [id] },
+      date: { $gte: startDate, $lte: endDate }
+    }).skip(skip).limit(limit);
+    const totalItems=await  RendezVousModel.countDocuments({
       "employes._id": { $in: [id] },
       date: { $gte: startDate, $lte: endDate }
     });
+    return {listeRdv,totalItems};
   }
-  static async getRendezVousForDate(id, dateString) {
+  static async getRendezVousForDate(id, dateString,page=1,limit=5) {
+    const skip = (page - 1) * limit;
     const dateToSearch = new Date(dateString);
   
     // Utilisez l'ID de l'employé et la date pour récupérer les rendez-vous associés
@@ -116,10 +133,15 @@ class Employe {
     endDate.setHours(23, 59, 59, 999); // Date de fin à 23:59:59.999
 
     // Utilisez l'ID de l'employé et la plage de temps pour récupérer les rendez-vous associés
-    return await RendezVousModel.find({
-        "employes._id": { $in: [id] },
-        date: { $gte: startDate, $lte: endDate }
+    const listeRdv= await RendezVousModel.find({
+      "employes._id": { $in: [id] },
+      date: { $gte: startDate, $lte: endDate }
+    }).skip(skip).limit(limit);
+    const totalItems=await  RendezVousModel.countDocuments({
+      "employes._id": { $in: [id] },
+      date: { $gte: startDate, $lte: endDate }
     });
+    return {listeRdv,totalItems};
   }
   static async  calculateDailyCommission(employeeId, date) {
     try {

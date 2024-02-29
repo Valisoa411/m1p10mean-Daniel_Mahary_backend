@@ -60,7 +60,8 @@ module.exports = {
     },
     async liste_employe(req, res) {
         try {
-          const clients = await Employe.getAllEmployees();
+          const {page,limit}=req.query;
+          const clients = await Employe.getAllEmployees(page,limit);
           res.json(clients);
         } catch (error) {
           console.error('Erreur lors de la récupération de la liste des clients :', error);
@@ -134,10 +135,10 @@ module.exports = {
     },
     async searchEmploye(req, res) {
         try {
-          const { q } = req.query;
+          const { q,page,limit } = req.query;
     
           // Utiliser la méthode statique searchElastic de votre modèle Employe
-          const result = await Employe.searchElastic(q);
+          const result = await Employe.searchElastic(q,page,limit);
     
           res.status(200).json(result);
         } catch (error) {
@@ -210,7 +211,8 @@ module.exports = {
     },
     async allDepense(req,res){
         try {
-            const listeDepense = await Depense.getAll();
+            const {page,limit}=req.query;
+            const listeDepense = await Depense.getAll(page,limit);
             console.log(listeDepense);
             res.json(listeDepense);
         } catch (error) {

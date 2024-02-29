@@ -134,8 +134,9 @@ module.exports = {
     },
     async listeRdv(req,res){
       try {
+          const {page,limit}=req.query;
           console.log(req.user.idclient);
-          const rendezVous = await Client.getRendezVous(req.user.idclient);
+          const rendezVous = await Client.getRendezVous(req.user.idclient,page,limit);
           res.json(rendezVous);
       } catch (error) {
           res.status(500).send({

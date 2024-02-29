@@ -20,8 +20,12 @@ class Depense{
     static async deleteDepense(id) {
         return await DepenseModel.findByIdAndDelete(id);
     }
-    static async getAll() {
-        return await DepenseModel.find();
+    static async getAll(page=1,limit=5) {
+        const skip = (page - 1) * limit;
+    const listeDepense=await DepenseModel.find().skip(skip)
+    .limit(limit);
+    const totalItems=await DepenseModel.countDocuments();
+    return {listeDepense,totalItems};
     }
 }
 
