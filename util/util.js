@@ -20,6 +20,15 @@ const parseTimeStringToDate = (timeString) => {
 }
 
 module.exports = {
+    getSimpleDate(date) {
+        const input = new Date(date);
+        input.setHours(0);
+        input.setMinutes(0);
+        input.setSeconds(0);
+        input.setMilliseconds(0);
+        return input
+    },
+
     formatDate(inputDate) {
         if (!inputDate) return '';
         const date = new Date(inputDate);

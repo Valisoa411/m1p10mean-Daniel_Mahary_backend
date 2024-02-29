@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongoose').Types;
 const { EmployeeModel } = require('../schema/employe.schema');
 const { HoraireModel } = require('../schema/horaire.schema');
+const { OffreSpecialModel } = require('../schema/offreSpecial.schema');
 const { PreferenceModel } = require('../schema/preference.schema');
 const { RendezVousModel } = require('../schema/rendezVous.schema');
 const { ServiceModel } = require('../schema/service.schema');
@@ -26,6 +27,16 @@ class Service {
         this.description = description;
         this.photo = photo;
         this.nbEmploye = nbEmploye;
+    }
+
+    async getAffectingOffre(selectedDate) {
+        const query = {
+            'service._id': this._id,
+            dateDebut: { $lte: selectedDate },
+            dateFin: { $gte: selectedDate }
+        };
+        const result = await OffreSpecialModel.find(query).exec();
+        return result;
     }
 
     async addToPreference(idClient) {

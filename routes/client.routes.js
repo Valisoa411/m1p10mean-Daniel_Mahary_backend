@@ -21,7 +21,7 @@ const routerCli = () => {
     //route qui a besoin d'authentification client
     routerCli.get('/liste_client', clientController.liste_client);
 
-    routerCli.get('/availability', serviceController.getAvailableHoraire);
+    routerCli.get('/availability', serviceController.getAvailableHoraireAndOffre);
     routerCli.get('/employeAvailable', serviceController.getAvailableEmploye);
     routerCli.post('/rendezVous', rendezVousController.createRendezVous);
     routerCli.put('/updateRdv', rendezVousController.updateRdv);

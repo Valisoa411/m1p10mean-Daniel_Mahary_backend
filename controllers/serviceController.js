@@ -1,18 +1,20 @@
 const Client = require('../models/Client');
+const OffreSpecial = require('../models/OffreSpecial');
 const Preference = require('../models/Preference');
 const Service = require('../models/Service')
 
 module.exports = {
-    async getAvailableHoraire(req, res) {
+    async getAvailableHoraireAndOffre(req, res) {
         try {
             const { idService, selectedDate } = req.query;
             const result = await new Service(idService).getById();
-            const service = new Service();
-            service.duree = result.duree;
-            service.nbEmploye = result.nbEmploye
+            let service = new Service();
+            service = { ...result };
             const availabilities = await service.availableHoraire(selectedDate);
+            const offres = await service.getAffectingOffre(selectedDate);
             res.status(200).send({
                 availabilities,
+                offres,
             })
         } catch (error) {
             // console.log(error);
@@ -80,6 +82,9 @@ module.exports = {
                 client._id = idclient;
                 const preferences = await client.getPreferences('service');
                 services = Preference.putPreferenceInList(services, preferences);
+                console.log("allServicesWithPreferences before: ", services);
+                services = await OffreSpecial.putOffreInList(services);
+                console.log("allServicesWithPreferences after: ", services);
             }
             res.status(200).send({
                 services,

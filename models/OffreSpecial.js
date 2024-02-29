@@ -1,6 +1,8 @@
 const { ClientModel } = require("../schema/client.schema")
 const { NotificationModel } = require("../schema/notification.schema")
 const { OffreSpecialModel } = require("../schema/offreSpecial.schema")
+const { getSimpleDate } = require("../util/util")
+const Service = require("./Service")
 
 class OffreSpecial {
     constructor(
@@ -9,7 +11,7 @@ class OffreSpecial {
         reduction = null,
         dateDebut = null,
         dateFin = null,
-    ){
+    ) {
         this.nom = nom
         this.service = service
         this.reduction = reduction
@@ -17,9 +19,32 @@ class OffreSpecial {
         this.dateFin = dateFin
     }
 
+    static calculPrixFinal(prixInitial, offres) {
+        let totalReduction = 0
+        offres.forEach(offre => {
+            totalReduction += offre.reduction ? offre.reduction : 0;
+        })
+        return prixInitial * (100-totalReduction) / 100;
+    }
+
+    static async putOffreInList(list) {
+        const now = getSimpleDate(new Date());
+        const listTmp = [];
+        for (const element of list) {
+            const service = new Service();
+            service._id = element._id;
+            const offres = await service.getAffectingOffre(now);
+            listTmp.push({
+                ...element,
+                prixFinal: OffreSpecial.calculPrixFinal(element.prix, offres),
+            });
+        }
+        return listTmp;
+    }
+
     async insert() {
         const newOffreSpecialMongoose = new OffreSpecialModel({ ...this })
-        const clientIds = await ClientModel.find({etat: 1}, '_id').exec();
+        const clientIds = await ClientModel.find({ etat: 1 }, '_id').exec();
         const notifications = [];
         clientIds.forEach(clientId => {
             notifications.push({
