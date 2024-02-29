@@ -7,6 +7,8 @@ const clientController = require('../controllers/clientController');
 const verifyToken=require('../middleware/tokenmiddleware');
 const serviceController = require('../controllers/serviceController');
 const rendezVousController = require('../controllers/rendezVousController');
+const preferenceController = require('../controllers/preferenceController');
+const employeController = require('../controllers/employeController');
 
 router.post('/signup', clientController.signUpClient);
 router.put('/validation/:id', clientController.validation_inscription);
@@ -25,6 +27,15 @@ const routerCli = () => {
     routerCli.put('/updateRdv', rendezVousController.updateRdv);
     routerCli.get('/rdv/:id', rendezVousController.getRdvById);
     routerCli.get('/listeRdv' , clientController.listeRdv);
+
+    routerCli.get('/service', serviceController.allServicesWithPreferences);
+    routerCli.get('/employe', employeController.allEmployesWithPreferences);
+
+    routerCli.post('/addPreference', preferenceController.addPreference);
+    routerCli.delete('/removePreference/:idObject', preferenceController.removePreference);
+
+    routerCli.get('/notification', clientController.getNotifications);
+    routerCli.put('/notification/check', clientController.checkNotification);
 
     return routerCli;
 }

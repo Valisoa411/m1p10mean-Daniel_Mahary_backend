@@ -7,7 +7,7 @@ module.exports = {
             const offreSpecial = await new OffreSpecial(nom, service, reduction, dateDebut, dateFin).insert();
             res.status(200).send({
                 message: "OffreSpecial enregistrer avec succes",
-                offreSpecial,
+                idOffreSpecial: offreSpecial._id,
             })
         } catch (error) {
             res.status(500).send({

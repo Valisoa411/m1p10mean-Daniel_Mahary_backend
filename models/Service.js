@@ -1,10 +1,11 @@
 const { ObjectId } = require('mongoose').Types;
 const { EmployeeModel } = require('../schema/employe.schema');
 const { HoraireModel } = require('../schema/horaire.schema');
+const { PreferenceModel } = require('../schema/preference.schema');
 const { RendezVousModel } = require('../schema/rendezVous.schema');
 const { ServiceModel } = require('../schema/service.schema');
 const { horaireGeneral } = require('../util/data');
-const { distributeAvailability, parseDateToTimeString, addDuree, getTimeString, getMinuteDifference, parseTimeStringToDate } = require('../util/util');
+const { distributeAvailability, parseDateToTimeString, addDuree, getTimeString, getMinuteDifference, parseTimeStringToDate, isInPreference } = require('../util/util');
 
 class Service {
     constructor(
@@ -25,6 +26,18 @@ class Service {
         this.description = description;
         this.photo = photo;
         this.nbEmploye = nbEmploye;
+    }
+
+    async addToPreference(idClient) {
+        await isInPreference(idClient, this._id);
+        const preference = {
+            idClient: idClient,
+            idObject: this._id,
+            type: 'service',
+            ordre: 0,
+        }
+        const newPreferenceMongoose = new PreferenceModel({...preference});
+        return await newPreferenceMongoose.save();
     }
 
     async availableHoraire(selectedDate) {

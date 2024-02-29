@@ -7,7 +7,7 @@ module.exports = {
         try {
             const { service, date, employes, prixFinal } = req.body;
             const client = await ClientModel.findById(req.user.idclient);
-            console.log("client: ", req.user);
+            // console.log("client: ", req.user);
             let rendezVous = new RendezVous(client, service, date, employes, prixFinal, "En attente");
             rendezVous = rendezVous.insert();
             res.status(200).send({
