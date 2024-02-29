@@ -6,6 +6,8 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const bcrypt=require('bcrypt');
 const Manager = require('../models/Manager');
+const TypeDepense = require('../models/TypeDepense');
+const Depense = require('../models/Depense');
 
 
 cloudinary.config({
@@ -155,5 +157,83 @@ module.exports = {
                 message: error.message
             })
         }
+    },
+    async createTypeDepense(req,res){
+        try {
+            const {label} = req.body;
+
+            console.log(label);
+
+            const typedepense= await new TypeDepense(label).insert();
+
+            res.status(201).json(typedepense);
+          } catch (error) {
+            console.error('Erreur lors de l\'ajout de typedepense :', error);
+            res.status(500).json({ message: 'Erreur lors de l\'ajout de typedepense' });
+          }
+    },
+    async allTypeDepense(req,res){
+        try {
+            const listeTypeDepense = await TypeDepense.getAll();
+            res.json(listeTypeDepense);
+        } catch (error) {
+            console.error('Erreur lors de la récupération de la liste de typedepense :', error);
+            res.status(500).json({ message: 'Erreur lors de la récupération de la liste de typedepense.' });
+        }
+    },
+    async getTypeDepenseId(req,res){
+            try {
+                const {idtypedepense}=req.query;
+                console.log(idtypedepense);
+                const typeDepense = await TypeDepense.getTypeDepenseById(idtypedepense);
+                console.log(typeDepense);
+                res.status(200).json(
+                    typeDepense
+                );
+            } catch (error) {
+                res.status(500).send({
+                    message: error.message
+                })
+            }    
+    },
+    async createDepense(req,res){
+        try {
+            const {typedepense,mois,montant,annee} = req.body;
+
+            const depense= await new Depense(typedepense,mois,montant,annee).insert();
+
+            res.status(201).json(depense);
+          } catch (error) {
+            console.error('Erreur lors de l\'ajout de dépense :', error);
+            res.status(500).json({ message: 'Erreur lors de l\'ajout de dépense' });
+          }
+    },
+    async allDepense(req,res){
+        try {
+            const listeDepense = await Depense.getAll();
+            console.log(listeDepense);
+            res.json(listeDepense);
+        } catch (error) {
+            console.error('Erreur lors de la récupération de la liste de dépense :', error);
+            res.status(500).json({ message: 'Erreur lors de la récupération de la liste de dépense.' });
+        }
+    },
+    async delete_depense(req, res) {
+        try {
+            const depenseId = req.params.id;
+      
+            // Récupérer l'employé pour obtenir le public_id de la photo
+      
+            // Supprimer l'employé de la base de données
+            await Depense.deleteDepense(depenseId);
+      
+            // Supprimer la photo sur Cloudinary en utilisant le public_id
+      
+            res.status(200).json({ message: 'Depense supprimé avec succès' });
+          } catch (error) {
+            console.error('Erreur lors de la suppression de dépense :', error);
+            res.status(500).json({ message: 'Erreur lors de la suppression de dépense' });
+          }
     }
+
 }

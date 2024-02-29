@@ -77,5 +77,43 @@ module.exports = {
             })
         }
         
+    },
+    async byDateChiffreAffaire(req,res){
+        try {
+            const {annee,mois}=req.query;
+            const result= await RendezVous.byDateChiffreAffaire(annee,mois);
+            console.log(result);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).send({
+                message: error.message
+            })
+        }
+        
+    },
+    async byMonthChiffreAffaire(req,res){
+        try {
+            const {annee}=req.query;
+            console.log(annee);
+            const result= await RendezVous.byMonthChiffreAffaire(annee);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).send({
+                message: error.message
+            })
+        }
+        
+    },
+    async benefice(req,res){
+        try {
+            const {annee}=req.query;
+            console.log(annee);
+            const result= await RendezVous.beneficesParMois(annee);
+            res.status(200).json(result);
+        } catch (error) {
+            res.status(500).send({
+                message: error.message
+            })
+        }
     }
 }

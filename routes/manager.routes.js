@@ -55,6 +55,15 @@ const routerManager = () => {
   routerMan.get('/info_employe', managerController.info_employe);
   routerMan.get('/byDate', rendezVousController.byDate);
   routerMan.get('/byMonth', rendezVousController.byMonth);
+  routerMan.get('/byDateChiffreAffaire', rendezVousController.byDateChiffreAffaire);
+  routerMan.get('/byMonthChiffreAffaire', rendezVousController.byMonthChiffreAffaire);
+  routerMan.get('/beneficeByMonth', rendezVousController.benefice);
+  routerMan.post('/createTypeDepense', managerController.createTypeDepense);
+  routerMan.post('/createDepense', managerController.createDepense);
+  routerMan.get('/listeTypeDepense', managerController.allTypeDepense);
+  routerMan.get('/listeDepense', managerController.allDepense);
+  routerMan.get('/getTypeDepense', managerController.getTypeDepenseId);
+  routerMan.delete('/deleteDepense/:id', managerController.delete_depense);
 
   return routerMan;
 }

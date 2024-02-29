@@ -1,3 +1,4 @@
+const { DepenseModel } = require("../schema/depense.schema");
 const { RendezVousModel } = require("../schema/rendezVous.schema");
 const ObjectId = require('mongoose').Types.ObjectId;
 
@@ -88,6 +89,148 @@ class RendezVous {
           ]);
         return result;
     }
+
+    static async byDateChiffreAffaire(year, month) {
+        const result = await RendezVousModel.aggregate([
+          {
+            $match: {
+              date: {
+                $gte: new Date(`${year}-${month}-01`),
+                $lt: new Date(`${year}-${parseInt(month) + 1}-01`),
+              },
+              etat:"Effectué"
+            },
+          },
+          {
+            $group: {
+              _id: { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
+              chiffreAffaire: { $sum: '$prixFinal' },
+            },
+          },
+          { $sort: { '_id': 1 } },
+        ]);
+        return result;
+      }
+
+      static async byMonthChiffreAffaire(year) {
+        const result = await RendezVousModel.aggregate([
+          {
+            $match: {
+              date: {
+                $gte: new Date(`${year}-01-01`),
+                $lt: new Date(`${parseInt(year) + 1}-01-01`),
+              },
+              etat:"Effectué"
+            },
+          },
+          {
+            $group: {
+              _id: { $dateToString: { format: '%Y-%m', date: '$date' } },
+              chiffreAffaire: { $sum: '$prixFinal' },
+            },
+          },
+          { $sort: { '_id': 1 } },
+        ]);
+        return result;
+      }
+      static comparerMois(anneeMois1) {
+        // Ajouter un zéro devant le mois si nécessaire
+        const mois1 = anneeMois1.split('-')[1].padStart(2, '0');
+        
+        // Comparer les chaînes de caractères des mois
+        return mois1;
+      }
+      static async beneficesParMois(year) {
+        // Obtenez les chiffres d'affaires par mois
+        const chiffresAffaires = await RendezVousModel.aggregate([
+          {
+            $match: {
+              date: {
+                $gte: new Date(`${year}-01-01`),
+                $lt: new Date(`${parseInt(year) + 1}-01-01`),
+              },
+              etat: "Effectué"
+            },
+          },
+          {
+            $group: {
+              _id: { $dateToString: { format: '%Y-%m', date: '$date' } },
+              chiffreAffaire: { $sum: '$prixFinal' },
+            },
+          },
+          { $sort: { '_id': 1 } },
+        ]);
+
+        console.log("chiffresAffaires");
+        console.log(chiffresAffaires);
+      
+        // Obtenez les dépenses par mois
+        const anne=parseInt(year);
+        const depenses = await DepenseModel.aggregate([
+            {
+              $match: {
+                annee: anne // Filtrer par année
+              }
+            },
+            {
+              $group: {
+                _id: '$mois', // Regrouper par mois
+                depense: { $sum: '$montant' } // Calculer la somme des dépenses pour chaque mois
+              }
+            },
+            {
+              $project: {
+                _id: 0, // Exclure le champ _id du résultat final si vous le souhaitez
+                mois: '$_id',
+                depense: 1
+              }
+            }
+        ]);
+
+        console.log("depenses");
+        console.log(depenses);
+      
+        // Créez un objet pour stocker les bénéfices par mois
+        const beneficesParMois = {};
+        const tabBenefices=[];
+
+        chiffresAffaires.forEach(chiffre => {
+            const mois = chiffre._id;
+            const chiffreAffaire = chiffre.chiffreAffaire;
+            const totalDepenses = depenses.find(depense => depense.mois === parseInt(RendezVous.comparerMois(mois)))?.depense || 0;
+          
+            beneficesParMois["_id"]=mois;
+            beneficesParMois["benefice"] = chiffreAffaire - totalDepenses;
+            tabBenefices.push(beneficesParMois);
+          });
+      
+        return tabBenefices;
+      }
+    //   const result = await RendezVousModel.aggregate([
+    //     {
+    //       $match: {
+    //         date: {
+    //           $gte: new Date(`${year}-01-01`),
+    //           $lt: new Date(`${parseInt(year) + 1}-01-01`),
+    //         },
+    //         etat: "Effectué"
+    //       },
+    //     },
+    //     {
+    //       $addFields: {
+    //         commissionAmount: { $multiply: ['$prixFinal', { $divide: ['$service.commission', 100] }] }
+    //       }
+    //     },
+    //     {
+    //       $group: {
+    //         _id: { $dateToString: { format: '%Y-%m', date: '$date' } },
+    //         totalAmount: { $sum: '$prixFinal' },
+    //         totalNet: { $sum: { $subtract: ['$prixFinal', '$commissionAmount'] } }
+    //       },
+    //     },
+    //     { $sort: { '_id': 1 } },
+    //   ]);
+    //   return result;
 
     
 
