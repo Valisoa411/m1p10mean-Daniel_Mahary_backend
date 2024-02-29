@@ -2,7 +2,6 @@ const { DepenseModel } = require("../schema/depense.schema");
 const { RendezVousModel } = require("../schema/rendezVous.schema");
 const ObjectId = require('mongoose').Types.ObjectId;
 const { NotificationModel } = require("../schema/notification.schema");
-const { RendezVousModel } = require("../schema/rendezVous.schema");
 const { formatDate } = require("../util/util");
 
 class RendezVous {
@@ -31,11 +30,12 @@ class RendezVous {
             target: this.client._id,
             titre: 'Rappel de Rendez-Vous',
             text: `Vous avez un rendez-vous pour un ${this.service.nom} le ${formatDate(this.date)}`,
-            lien: '/client/accueil',
+            lien: '/client/listRdv',
             dateNotification: dateRappel,
             checked: false,
         }
-        await NotificationModel.insertOne(notification);
+        const newNotoficationMongoose = new NotificationModel({...notification});
+        await newNotoficationMongoose.save()
         return await newRendezVousMongoose.save();
     }
 
