@@ -29,7 +29,7 @@ module.exports = {
                 employes,
             })
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             res.status(500).send({
                 message: error.message
             })

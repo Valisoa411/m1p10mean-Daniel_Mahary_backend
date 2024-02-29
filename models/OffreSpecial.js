@@ -1,3 +1,5 @@
+const { ClientModel } = require("../schema/client.schema")
+const { NotificationModel } = require("../schema/notification.schema")
 const { OffreSpecialModel } = require("../schema/offreSpecial.schema")
 
 class OffreSpecial {
@@ -17,6 +19,20 @@ class OffreSpecial {
 
     async insert() {
         const newOffreSpecialMongoose = new OffreSpecialModel({ ...this })
+        const clientIds = await ClientModel.find({etat: 1}, '_id').exec();
+        const notifications = [];
+        clientIds.forEach(clientId => {
+            notifications.push({
+                type: 'offre',
+                target: clientId._id,
+                titre: this.nom,
+                text: `Réduction de ${this.reduction} sur ${this.service.nom}`,
+                lien: '/client/accueil',
+                dateNotification: new Date(),
+                checked: false,
+            })
+        })
+        await NotificationModel.insertMany(notifications);
         return await newOffreSpecialMongoose.save();
     }
 

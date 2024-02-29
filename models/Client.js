@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const { ClientModel } = require('../schema/client.schema');
 const { PreferenceModel } = require('../schema/preference.schema');
+const { NotificationModel } = require('../schema/notification.schema');
 const { ObjectId } = require('mongoose').Types;
 
 class Client {
@@ -37,6 +38,16 @@ class Client {
             throw new Error('Date de naissance doit être antérieure à la date actuelle');
         }
 
+    }
+
+    async getNotifications() {
+        const query = {
+            target: new ObjectId(this._id),
+            dateNotification: { $lt: new Date() },
+        }
+        return await NotificationModel.find(query)
+            .sort({ dateNotification: -1 })
+            .exec();
     }
 
     async getPreferences(type) {

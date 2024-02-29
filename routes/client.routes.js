@@ -31,6 +31,9 @@ const routerCli = () => {
     routerCli.post('/addPreference', preferenceController.addPreference);
     routerCli.delete('/removePreference/:idObject', preferenceController.removePreference);
 
+    routerCli.get('/notification', clientController.getNotifications);
+    routerCli.put('/notification/check', clientController.checkNotification);
+
     return routerCli;
 }
 
