@@ -9,7 +9,9 @@ module.exports = {
             const { idService, selectedDate } = req.query;
             const result = await new Service(idService).getById();
             let service = new Service();
-            service = { ...result };
+            service._id = result._id;
+            service.duree = result.duree;
+            service.nbEmploye = result.nbEmploye
             const availabilities = await service.availableHoraire(selectedDate);
             const offres = await service.getAffectingOffre(selectedDate);
             res.status(200).send({
@@ -17,7 +19,7 @@ module.exports = {
                 offres,
             })
         } catch (error) {
-            // console.log(error);
+            console.log(error);
             res.status(500).send({
                 message: error.message
             })
