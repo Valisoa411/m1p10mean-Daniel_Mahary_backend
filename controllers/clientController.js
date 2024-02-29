@@ -143,6 +143,20 @@ module.exports = {
             message: error.message,
           });
     }
-  }
+    
+  },
+  async searchRdv(req,res){
+    try {
+        const {date1,date2,page,limit} =req.query;
+        console.log(req.user.idclient);
+        const rendezVous = await Client.getRendezVousBetweenDates(req.user.idclient,date1,date2,page,limit);
+
+        res.json(rendezVous);
+    } catch (error) {
+        res.status(500).send({
+          message: error.message,
+        });
+    }
+},
 
 }

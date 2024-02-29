@@ -119,6 +119,24 @@ class Client {
         const totalItems=await RendezVousModel.countDocuments({ "client._id": { $in: [id] } });
         return {listeRdv,totalItems};
     }
+    static async getRendezVousBetweenDates(id, startDateString, endDateString,page=1,limit=5) {
+        const skip = (page - 1) * limit;
+        const startDate = new Date(startDateString);
+        startDate.setHours(0, 0, 0, 0);
+        const endDate = new Date(endDateString);
+        endDate.setHours(23, 59, 59, 999);
+      
+        // Utilisez l'ID de l'employé et les dates pour récupérer les rendez-vous associés
+        const listeRdv= await RendezVousModel.find({
+          "client._id": { $in: [id] },
+          date: { $gte: startDate, $lte: endDate }
+        }).skip(skip).limit(limit);
+        const totalItems=await  RendezVousModel.countDocuments({
+          "client._id": { $in: [id] },
+          date: { $gte: startDate, $lte: endDate }
+        });
+        return {listeRdv,totalItems};
+      }
 
 
 }

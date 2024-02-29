@@ -25,6 +25,7 @@ const routerCli = () => {
     routerCli.put('/updateRdv', rendezVousController.updateRdv);
     routerCli.get('/rdv/:id', rendezVousController.getRdvById);
     routerCli.get('/listeRdv' , clientController.listeRdv);
+    routerCli.get('/searchRdv' , clientController.searchRdv);
 
     return routerCli;
 }
