@@ -16,7 +16,8 @@ class SendMail {
 
   async send() {
     // URL de l'API avec l'ID du client en tant que paramètre
-    const apiURL = `http://localhost:4200/client/validation/${this.customer._id}`;
+    // const apiURL = `http://localhost:4200/client/validation/${this.customer._id}`;
+    const apiURL = `https://m1p11mean-daniel-mahary.vercel.app/client/validation/${this.customer._id}`;
 
     // Corps HTML du mail
     const mailBody = `
