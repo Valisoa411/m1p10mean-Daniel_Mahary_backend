@@ -17,7 +17,7 @@ cloudinary.config({
 module.exports = {
     async allEmployesWithPreferences(req, res) {
         try {
-            let employes = await Employe.getAllEmployees();
+            let employes = (await Employe.getAllEmployees()).listeEmploye;
             const { idclient, role } = req.user;
             if(role === 'client') {
                 const client = new Client();
@@ -29,7 +29,7 @@ module.exports = {
                 employes,
             })
         } catch (error) {
-            // console.log(error);
+            console.log(error);
             res.status(500).send({
                 message: error.message
             })

@@ -16,6 +16,7 @@ class Preference {
     }
 
     static putPreferenceInList(list, preferences) {
+        if(list.length === 0) return;
         const listTmp = [];
         list.forEach(element => {
             const preference = preferences.find(preference => preference.idObject === element._id.toString())
