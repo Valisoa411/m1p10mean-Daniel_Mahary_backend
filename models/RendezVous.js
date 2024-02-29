@@ -24,7 +24,8 @@ class RendezVous {
     async insert() {
         const newRendezVousMongoose = new RendezVousModel({...this});
         const dateRappel = new Date(this.date);
-        dateRappel.setHours(dateRappel.getHours() - 1);
+        // dateRappel.setHours(dateRappel.getHours() - 1);
+        dateRappel.setDate(dateRappel.getDate() - 1);
         const notification = {
             type: 'rappel',
             target: this.client._id,
